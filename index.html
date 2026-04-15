@@ -2,10 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>USW Network | Free Code & Deploy</title>
-    <meta name="description" content="USW Network: A free platform to code Python and deploy instantly via GitHub.">
-    
+    <meta name="viewport" content="width=1200"> <title>USW Network | Secure Desktop IDE</title>
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,28 +10,29 @@
 
 <header>
     <div class="logo-area">
-        <div class="logo">USW Network</div>
-        <div class="tagline">Code Freely. Deploy Instantly.</div>
+        <span class="logo">USW Network</span>
+        <span class="tagline">Secure Node</span>
     </div>
     <div class="nav-buttons">
-        <button class="btn-run" onclick="executePython()">▶ Run Code</button>
-        <button class="btn-deploy" onclick="deployToGithub()">🚀 Deploy to GitHub</button>
+        <button class="btn-run" onclick="executePython()">Run Script</button>
+        <button class="btn-deploy" onclick="deployToGithub()">Deploy Repo</button>
     </div>
 </header>
 
-<div id="main-container">
+<main id="main-container">
     <div id="editor-root"></div>
     <div id="console-container">
-        <div class="console-header">System Output</div>
-        <div id="console">Initializing USW environment...</div>
+        <div class="console-header">Isolated Kernel Output</div>
+        <div id="console">Verifying Desktop Environment...</div>
     </div>
-</div>
+</main>
 
 <footer>
-    <div>© 2026 USW Network | Powered by GitHub & Pyodide</div>
-    <div class="security-badge">Secure: Code stays in your browser</div>
+    <span>Secure Session Active</span>
+    <span class="status" id="engine-status">Engine: Connecting...</span>
 </footer>
 
+<script src="config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
 <script src="script.js"></script>
