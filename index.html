@@ -3,20 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreeCode Deploy</title>
+    <title>USW Network - Code & Deploy</title>
+    
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
+    
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #1a1a1a; color: white; }
-        .btn { padding: 15px 30px; background: #238636; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 20px; }
-        .btn:hover { background: #2ea043; }
-        code { background: #333; padding: 2px 5px; border-radius: 3px; }
+        :root {
+            --bg-dark: #0d1117;
+            --panel-dark: #161b22;
+            --accent: #238636;
+            --usw-purple: #8957e5;
+            --text-main: #c9d1d9;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: var(--panel-dark);
+            border-bottom: 1px solid #30363d;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #f0f6fc;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-run { background: var(--accent); color: white; }
+        .btn-run:hover { background: #2ea043; }
+
+        .btn-deploy { background: var(--usw-purple); color: white; }
+        .btn-deploy:hover { background: #a371f7; }
+
+        #main-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 60px);
+        }
+
+        #editor-root {
+            flex: 1;
+            width: 100%;
+        }
+
+        #console {
+            height: 200px;
+            background: #000;
+            border-top: 1px solid #30363d;
+            padding: 10px;
+            font-family: 'Cascadia Code', 'Courier New', monospace;
+            font-size: 14px;
+            color: #39ff14;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .status-bar {
+            background: var(--panel-dark);
+            font-size: 12px;
+            padding: 5px 20px;
+            border-top: 1px solid #30363d;
+            color: #8b949e;
+        }
     </style>
 </head>
 <body>
-    <h1>Code Freely. Deploy Instantly.</h1>
-    <p>1. Click the button below to use our Template.</p>
-    <p>2. Press the <code>.</code> (period) key on your keyboard to open the Web Editor.</p>
-    <p>3. Edit your code and Commit to see it live.</p>
-    
-    <a href="https://github.com/new?template_name=YOUR-REPO&template_owner=YOUR-USERNAME" class="btn">Create My Project</a>
+
+<header>
+    <div class="logo">USW NETWORK</div>
+    <div class="nav-buttons">
+        <button class="btn-run" onclick="executePython()">▶ Run Code</button>
+        <button class="btn-deploy" onclick="deployToGithub()">🚀 Deploy to GitHub</button>
+    </div>
+</header>
+
+<div id="main-container">
+    <div id="editor-root"></div>
+    <div id="console">Initializing USW environment...</div>
+    <div class="status-bar">Language: Python 3.11 (Pyodide) | Host: GitHub Pages</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+
+<script>
+    let editor;
+    let pyodide;
+
+    // 1. Initialize Monaco Editor
+    require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
+    require(['vs/editor/editor.main'], function() {
+        editor = monaco.editor.create(document.getElementById('editor-root'), {
+            value: [
+                '# Welcome to USW Network',
+                'def greet(name):',
+                '    return f"Hello {name}, your code is running freely!"',
+                '',
+                'print(greet("Developer"))',
+                'print("System: Deployment ready.")'
+            ].join('\n'),
+            language: 'python',
+            theme: 'vs-dark',
+            automaticLayout: true,
+            fontSize: 16
+        });
+    });
+
+    // 2. Initialize Python
+    async function initPython() {
+        const consoleEl = document.getElementById('console');
+        try {
+            pyodide = await loadPyodide();
+            consoleEl.innerText = "USW Network: Python Engine Ready.\n";
+        } catch (e) {
+            consoleEl.innerText = "Error loading Python: " + e;
+        }
+    }
+    initPython();
+
+    // 3. Run Logic
+    async function executePython() {
+        if (!pyodide) return;
+        const consoleEl = document.getElementById('console');
+        const code = editor.getValue();
+        consoleEl.innerText = "Running...\n";
+        
+        try {
+            await pyodide.runPythonAsync(`
+                import sys
+                import io
+                sys.stdout = io.StringIO()
+            `);
+            await pyodide.runPythonAsync(code);
+            const stdout = pyodide.runPython("sys.stdout.getvalue()");
+            consoleEl.innerText = stdout || "Done (No output)";
+        } catch (err) {
+            consoleEl.innerText = "Python Error: " + err;
+        }
+    }
+
+    // 4. Deploy Logic
+    function deployToGithub() {
+        // Replace with your GitHub Username and the repo name you set as a template
+        const user = "YOUR_GITHUB_USERNAME"; 
+        const template = "USW_TEMPLATE_REPO";
+        
+        const githubUrl = `https://github.com/new?template_name=${template}&template_owner=${user}`;
+        window.open(githubUrl, '_blank');
+    }
+</script>
+
 </body>
 </html>
