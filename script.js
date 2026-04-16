@@ -1,133 +1,70 @@
-/**
- * USW Network | Secure Node Logic
- * Version: 2.3.0
- */
-
 let editor;
 let pyodide;
-let activeLang = 'python';
+let activeLang;
 
-// --- 1. CORE INITIALIZATION ---
-
-// Load Monaco Editor with JetBrains font and dark theme
+// Initialize Monaco Editor
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
 require(['vs/editor/editor.main'], function() {
     editor = monaco.editor.create(document.getElementById('monaco-root'), {
         theme: 'vs-dark',
         automaticLayout: true,
-        fontSize: 15,
-        fontFamily: "'JetBrains Mono', monospace",
-        minimap: { enabled: false }
+        fontSize: 15
     });
-    console.log("IDE Canvas Ready");
 });
 
-// --- 2. MODULE NAVIGATION ---
-
-/**
- * Switch from Dashboard to IDE
- * @param {string} lang - Language ID (python, javascript, cpp, etc.)
- * @param {string} title - Display Name
- */
+// Switch from Dashboard to IDE
 async function bootIDE(lang, title) {
     activeLang = lang;
-    
-    // UI Transitions
-    document.getElementById('dashboard-view').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'none';
     document.getElementById('editor-view').style.display = 'flex';
-    document.getElementById('ide-actions').style.display = 'flex';
+    document.getElementById('ide-controls').style.display = 'flex';
     
-    // Set Monaco Language
+    const terminal = document.getElementById('terminal-content');
     const model = editor.getModel();
-    monaco.editor.setModelLanguage(model, lang === 'cpp' ? 'cpp' : lang);
+    monaco.editor.setModelLanguage(model, lang);
 
-    // Language-Specific Logic
-    const output = document.getElementById('terminal-content');
-    
     if (lang === 'python') {
-        editor.setValue("# USW Python Node\nimport sys\nprint('Kernel Live:', sys.version)\n");
+        editor.setValue("# Python Node Initialized\nimport sys\nprint(f'WASM Python Active: {sys.version}')");
         if (!pyodide) {
-            output.innerText = "Initializing Python WASM Kernel...";
+            terminal.innerText = "Connecting to Isolated WASM Kernel...";
             try {
                 pyodide = await loadPyodide();
-                output.innerText = "Python 3.11 Node Online.\n";
+                terminal.innerText = "Kernel 3.11 Ready.\n";
             } catch (e) {
-                output.innerText = "Security Error: Python Kernel Failed.";
+                terminal.innerText = "Security Error: Kernel Failed to load.";
             }
         }
     } else if (lang === 'javascript') {
-        editor.setValue("// USW JavaScript Node\nconsole.log('Web Kernel Active');\n");
-        output.innerText = "JavaScript Engine Ready (Browser Native).";
+        editor.setValue("// JavaScript Web Kernel Active\nconsole.log('USW Network Ready');");
+        terminal.innerText = "JS Engine Ready (Browser Native).\n";
     } else {
-        editor.setValue(`// ${title} Node\n// Note: This language requires a WASM compiler connection.\n`);
-        output.innerText = "WASM Node for this language is in Alpha.";
+        editor.setValue(`// ${title} Node\n// Note: WASM execution for this language is currently read-only.`);
+        terminal.innerText = "System: Compiler node offline.\n";
     }
 }
 
-// --- 3. EXECUTION ENGINE ---
-
+// Execution Logic
 async function runCode() {
-    const output = document.getElementById('terminal-content');
+    const terminal = document.getElementById('terminal-content');
     const code = editor.getValue();
-    output.innerText = `[System: Executing ${activeLang.toUpperCase()}]\n`;
+    terminal.innerText = `[System] Executing ${activeLang}...\n`;
 
     try {
         if (activeLang === 'python' && pyodide) {
-            // Setup virtual stdout to capture prints
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(code);
-            const result = pyodide.runPython("sys.stdout.getvalue()");
-            output.innerText += result || "Execution finished (no output).";
+            terminal.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Success (No output).";
         } else if (activeLang === 'javascript') {
-            // Secure local eval for JS
-            const logs = [];
-            const originalLog = console.log;
-            console.log = (m) => logs.push(m);
             eval(code);
-            console.log = originalLog;
-            output.innerText += logs.join('\n') || "JS Finished.";
+            terminal.innerText += "\n[Done] Script executed successfully.";
         } else {
-            output.innerText += "Engine Warning: Selected language kernel is currently read-only.";
+            terminal.innerText += "\n[Error] Language kernel not found.";
         }
     } catch (err) {
-        output.innerText += "\n[ERROR] " + err;
+        terminal.innerText = "Error: " + err;
     }
 }
-
-// --- 4. GITHUB DEPLOYMENT ---
 
 function deployToGithub() {
-    // Uses details from your config.js
-    const user = typeof USW_CONFIG !== 'undefined' ? USW_CONFIG.GITHUB.USER : "randmyles2-maker";
-    const repo = typeof USW_CONFIG !== 'undefined' ? USW_CONFIG.GITHUB.REPO : "usw";
-    
-    const url = `https://github.com/new?template_name=${repo}&template_owner=${user}`;
-    window.open(url, '_blank');
+    window.open(`https://github.com/new`, '_blank');
 }
-
-// --- 5. PWA (DOWNLOADABLE APP) LOGIC ---
-
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const installBtn = document.getElementById('install-btn');
-    if (installBtn) installBtn.style.display = 'block';
-});
-
-async function triggerInstall() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-            document.getElementById('install-btn').style.display = 'none';
-        }
-        deferredPrompt = null;
-    }
-}
-
-// Bind install button if it exists
-document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('install-btn');
-    if (btn) btn.onclick = triggerInstall;
-});
