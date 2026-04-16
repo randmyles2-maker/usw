@@ -1,70 +1,62 @@
 let editor;
 let pyodide;
-let activeLang;
+let activeID;
 
-// Initialize Monaco Editor
+// Initial Monaco Setup
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
 require(['vs/editor/editor.main'], function() {
     editor = monaco.editor.create(document.getElementById('monaco-root'), {
         theme: 'vs-dark',
         automaticLayout: true,
-        fontSize: 15
+        fontSize: 16,
+        fontFamily: "'JetBrains Mono', monospace",
+        lineNumbers: "on",
+        glyphMargin: true
     });
 });
 
-// Switch from Dashboard to IDE
-async function bootIDE(lang, title) {
-    activeLang = lang;
-    document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('editor-view').style.display = 'flex';
-    document.getElementById('ide-controls').style.display = 'flex';
+async function bootIDE(id, label) {
+    activeID = id;
+    document.getElementById('matrix-dashboard').style.display = 'none';
+    document.getElementById('ide-stage').style.display = 'flex';
+    document.getElementById('ide-nav').style.display = 'flex';
     
-    const terminal = document.getElementById('terminal-content');
+    const term = document.getElementById('terminal-content');
     const model = editor.getModel();
-    monaco.editor.setModelLanguage(model, lang);
+    monaco.editor.setModelLanguage(model, id === 'python' ? 'python' : 'javascript');
 
-    if (lang === 'python') {
-        editor.setValue("# Python Node Initialized\nimport sys\nprint(f'WASM Python Active: {sys.version}')");
+    if (id === 'python') {
+        editor.setValue("# NEURAL_NODE_ACTIVE\nprint('ACCESSING_KERNELS...')");
         if (!pyodide) {
-            terminal.innerText = "Connecting to Isolated WASM Kernel...";
-            try {
-                pyodide = await loadPyodide();
-                terminal.innerText = "Kernel 3.11 Ready.\n";
-            } catch (e) {
-                terminal.innerText = "Security Error: Kernel Failed to load.";
-            }
+            term.innerText = ">> INJECTING_WASM_PYTHON_RUNTIME...\n";
+            pyodide = await loadPyodide();
+            term.innerText += ">> UPLINK_SUCCESSFUL.\n";
         }
-    } else if (lang === 'javascript') {
-        editor.setValue("// JavaScript Web Kernel Active\nconsole.log('USW Network Ready');");
-        terminal.innerText = "JS Engine Ready (Browser Native).\n";
     } else {
-        editor.setValue(`// ${title} Node\n// Note: WASM execution for this language is currently read-only.`);
-        terminal.innerText = "System: Compiler node offline.\n";
+        editor.setValue("// WEB_V8_UPLINK_READY");
+        term.innerText = ">> STANDBY_FOR_INPUT...";
     }
 }
 
-// Execution Logic
 async function runCode() {
-    const terminal = document.getElementById('terminal-content');
+    const term = document.getElementById('terminal-content');
     const code = editor.getValue();
-    terminal.innerText = `[System] Executing ${activeLang}...\n`;
+    term.innerText = ">> EXECUTING_SEQUENCE...\n";
 
     try {
-        if (activeLang === 'python' && pyodide) {
+        if (activeID === 'python' && pyodide) {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(code);
-            terminal.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Success (No output).";
-        } else if (activeLang === 'javascript') {
-            eval(code);
-            terminal.innerText += "\n[Done] Script executed successfully.";
+            term.innerText = ">> RESULT_STREAM: \n" + pyodide.runPython("sys.stdout.getvalue()");
         } else {
-            terminal.innerText += "\n[Error] Language kernel not found.";
+            eval(code);
+            term.innerText += ">> LOCAL_EXEC_COMPLETE.";
         }
-    } catch (err) {
-        terminal.innerText = "Error: " + err;
+    } catch (e) {
+        term.innerText = ">> CRITICAL_ERROR: " + e;
     }
 }
 
 function deployToGithub() {
-    window.open(`https://github.com/new`, '_blank');
+    window.open("https://github.com/new", "_blank");
 }
