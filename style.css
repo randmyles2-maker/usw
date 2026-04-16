@@ -1,92 +1,55 @@
-/* Color Palette */
 :root {
-    --bg-main: #0a0c10;
-    --bg-alt: #161b22;
-    --primary: #1f6feb;
-    --secondary: #8957e5;
-    --success: #238636;
-    --danger: #da3633;
-    --text-main: #c9d1d9;
-    --text-alt: #8b949e;
-    --glass-white: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --blue: #58a6ff;
+    --green: #238636;
 }
 
-/* Global Aesthetics */
-body { margin: 0; padding: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Inter', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
-/* Frosted Glass Header */
+/* Header */
 .glass-header { 
-    height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; 
-    background: rgba(13, 17, 23, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 100;
+    height: 70px; display: flex; align-items: center; justify-content: space-between; 
+    padding: 0 40px; background: rgba(22, 27, 34, 0.8); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
 }
-.logo-area { display: flex; align-items: baseline; gap: 8px; font-weight: 800; cursor: pointer; }
-.logo-icon { color: var(--primary); font-size: 20px; }
-.logo-text { font-size: 24px; color: #f0f6fc; }
-.logo-subtext { font-size: 12px; color: var(--text-alt); font-weight: 400; }
+.logo { font-weight: 800; font-size: 20px; color: var(--blue); cursor: pointer; letter-spacing: 1px; }
 
-/* Dashboard Layout */
-.container { flex: 1; padding: 60px 40px; overflow-y: auto; max-width: 1300px; margin: 0 auto; width: 100%; box-sizing: border-box; }
-.filter-bar { display: flex; gap: 12px; margin-bottom: 40px; align-items: center; }
+/* Dashboard */
+.container { padding: 50px 40px; max-width: 1300px; margin: 0 auto; }
+.filter-bar { display: flex; gap: 12px; margin-bottom: 40px; align-items: center; color: #8b949e; }
 .filter-btn { 
-    background: transparent; border: 1px solid var(--glass-border); color: var(--text-alt);
-    padding: 8px 20px; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s;
+    background: var(--card); border: 1px solid var(--border); color: #c9d1d9;
+    padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 13px; transition: 0.2s;
 }
-.filter-btn:hover { color: white; border-color: white; }
-.filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+.filter-btn.active { background: #1f6feb; border-color: #388bfd; }
 
-/* The Module Grid */
-.module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
-
-/* Professionally Designed Glass Cards */
-.glass-card { 
-    background: rgba(22, 27, 34, 0.4); border: 1px solid var(--glass-border); border-radius: 12px;
-    padding: 30px; display: flex; flex-direction: column; gap: 15px; cursor: pointer; transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); position: relative;
-    overflow: hidden;
+/* Grid & Cards */
+.module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+.card { 
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px; 
+    padding: 30px; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column;
 }
-.glass-card:hover { transform: translateY(-8px); border-color: var(--primary); background: rgba(22, 27, 34, 0.7); }
-.card-icon { font-size: 30px; position: absolute; right: 20px; top: 20px; opacity: 0.4; transition: 0.3s; }
-.glass-card:hover .card-icon { opacity: 1; transform: scale(1.1); }
-.glass-card h3 { margin: 0; font-size: 20px; color: #f0f6fc; }
-.glass-card p { margin: 0; color: var(--text-alt); font-size: 14px; line-height: 1.6; }
+.card:hover { border-color: var(--blue); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.card-tag { color: var(--blue); font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; }
+.card h3 { margin: 0 0 10px 0; color: #f0f6fc; }
+.card p { color: #8b949e; font-size: 14px; line-height: 1.6; flex-grow: 1; margin-bottom: 25px; }
 
-/* Card Actions */
-.card-action { 
-    margin-top: auto; font-weight: 600; color: var(--primary); font-size: 13px; transition: 0.2s; padding-top: 15px; border-top: 1px solid var(--glass-border);
+.create-btn { 
+    background: #21262d; color: #c9d1d9; border: 1px solid var(--border); 
+    padding: 12px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s;
 }
-.glass-card:hover .card-action { color: white; }
-.diagnostic:hover { border-color: var(--secondary); }
-.check { color: var(--secondary); }
-.disabled { color: #555; }
+.card:hover .create-btn { background: var(--green); color: white; border-color: var(--green); }
 
-/* PWA App Button (Commercial look) */
-.pwa-badge { 
-    background: var(--success); color: white; border: none; font-weight: 800; font-size: 12px;
-    padding: 10px 20px; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;
-    transition: 0.3s;
-}
-.pwa-badge:hover { background: #2ea043; transform: scale(1.05); }
+/* Editor Mode */
+#editor-view { height: calc(100vh - 70px); display: flex; flex-direction: column; }
+#monaco-root { flex-grow: 1; }
+#terminal-pane { height: 220px; background: #000; border-top: 2px solid var(--border); }
+.term-head { background: #161b22; padding: 10px 20px; font-size: 12px; color: #8b949e; font-weight: bold; }
+#terminal-content { padding: 15px 20px; font-family: monospace; color: #39ff14; font-size: 14px; overflow-y: auto; }
 
-/* The IDE Stage */
-#editor-stage { height: calc(100vh - 70px); display: flex; flex-direction: column; }
-#editor-canvas { flex: 1; }
-#terminal-pane { height: 250px; background: black; border-top: 2px solid var(--glass-border); display: flex; flex-direction: column; }
-.term-head { background: var(--bg-alt); padding: 8px 15px; color: var(--text-alt); font-size: 12px; font-weight: 600; text-transform: uppercase; }
-#console-stream { flex: 1; font-family: 'JetBrains Mono', monospace; color: #39ff14; font-size: 14px; padding: 15px; overflow-y: auto; line-height: 1.5; }
-
-/* Desktop-Only Lock */
-.desktop-only { display: none; }
-@media (min-width: 1024px) { .desktop-only { display: flex; } }
-
-/* Global Buttons */
-button { border-radius: 6px; border: none; font-weight: 600; font-size: 13px; padding: 8px 16px; transition: 0.2s; cursor: pointer; margin-left: 10px; }
-.btn-primary { background: var(--success); color: white; }
-.btn-primary:hover { background: #2ea043; }
-.btn-secondary { background: var(--secondary); color: white; }
-.btn-danger { background: var(--danger); color: white; }
-
-/* PWA Meta */
-[id="install-btn"] { background: var(--primary); display: none; }
-
-footer { height: 30px; display: flex; justify-content: space-between; padding: 0 40px; align-items: center; border-top: 1px solid var(--glass-border); background: var(--bg-main); font-size: 11px; color: var(--text-alt); }
+/* Action Buttons */
+.btn-run { background: var(--green); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-right: 8px; font-weight: bold; }
+.btn-deploy { background: #8957e5; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-right: 8px; font-weight: bold; }
+.btn-exit { background: #da3633; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
