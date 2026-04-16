@@ -33,31 +33,24 @@
 </header>
 
 <main id="dashboard" class="view">
+    <aside class="sidebar">
+        <div class="sidebar-label">ARCHIVED_NODES</div>
+        <div id="saved-files-list"></div>
+    </aside>
+
     <div class="list-container">
-        <div class="list-header">ENVIRONMENTS</div>
-        
-        <div class="list-item" onclick="launchIDE('html')">
-            <span class="ln">01</span>
-            <span class="title">HTML / CSS</span>
-            <span class="desc">Static Markup</span>
+        <div class="list-header">NEW_ENVIRONMENTS</div>
+        <div class="list-item" onclick="launchIDE('html', true)">
+            <span class="ln">01</span><span class="title">HTML / CSS</span><span class="desc">New Session</span>
         </div>
-
-        <div class="list-item" onclick="launchIDE('javascript')">
-            <span class="ln">02</span>
-            <span class="title">JavaScript</span>
-            <span class="desc">V8 Runtime</span>
+        <div class="list-item" onclick="launchIDE('javascript', true)">
+            <span class="ln">02</span><span class="title">JavaScript</span><span class="desc">New Session</span>
         </div>
-
-        <div class="list-item" onclick="launchIDE('python')">
-            <span class="ln">03</span>
-            <span class="title">Python</span>
-            <span class="desc">Standard Scripting</span>
+        <div class="list-item" onclick="launchIDE('python', true)">
+            <span class="ln">03</span><span class="title">Python Node</span><span class="desc">New Session</span>
         </div>
-
-        <div class="list-item" onclick="launchIDE('python')">
-            <span class="ln">04</span>
-            <span class="title">Python 3</span>
-            <span class="desc">WASM Kernel 3.11</span>
+        <div class="list-item" onclick="launchIDE('python', true)">
+            <span class="ln">04</span><span class="title">Python 3</span><span class="desc">New Session</span>
         </div>
     </div>
 </main>
@@ -70,7 +63,6 @@
 </div>
 
 <script src="storage.js"></script>
-<script src="config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
 <script src="script.js"></script>
