@@ -2,62 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>USW // NEURAL NODE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USW // AETHER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="future-ui">
+<body>
 
-<div class="scanline"></div>
-
-<header class="hud-top">
-    <div class="glitch-logo" data-text="USW_NETWORK">USW_NETWORK</div>
-    <div class="system-stats">
-        <span>CPU_LOAD: OPTIMAL</span>
-        <span class="pulse">KERNEL: ACTIVE</span>
-    </div>
-    <div id="ide-nav" style="display: none;">
-        <button class="neon-btn run" onclick="runCode()">EXECUTE</button>
-        <button class="neon-btn deploy" onclick="deployToGithub()">UPLINK</button>
-        <button class="neon-btn exit" onclick="location.reload()">TERMINATE</button>
+<header class="aether-nav">
+    <div class="brand" onclick="location.reload()">USW NETWORK</div>
+    <div id="runtime-controls" class="hidden">
+        <button class="action-btn run" onclick="runCode()">Run</button>
+        <button class="action-btn deploy" onclick="deployToGithub()">Deploy</button>
+        <button class="close-icon" onclick="location.reload()">✕</button>
     </div>
 </header>
 
-<div id="matrix-dashboard" class="matrix-container">
-    <div class="interface-label">// SELECT_ENVIRONMENT_ID</div>
-    
-    <div class="hex-grid">
-        <div class="node-card" onclick="bootIDE('python', 'PY_CORE_311')">
-            <div class="node-glow"></div>
-            <div class="node-header">01 // PYTHON</div>
-            <div class="node-body">NEURAL_SCRIPTING_ENGINE</div>
-            <div class="node-footer">INITIALIZE_UPLINK</div>
-        </div>
+<main id="dashboard" class="view">
+    <section class="hero-section">
+        <h1>Environments</h1>
+        <p>Select a specialized node to begin.</p>
+    </section>
 
-        <div class="node-card" onclick="bootIDE('javascript', 'JS_V8_LOCAL')">
-            <div class="node-glow"></div>
-            <div class="node-header">02 // JAVASCRIPT</div>
-            <div class="node-body">WEB_LOGIC_SYNCHRONIZER</div>
-            <div class="node-footer">INITIALIZE_UPLINK</div>
+    <div class="aether-grid">
+        <div class="node" onclick="launchIDE('python')">
+            <span class="type">AI / DATA</span>
+            <h3>Python Core</h3>
+            <div class="status-dot"></div>
         </div>
-
-        <div class="node-card" onclick="bootIDE('cpp', 'CPP_WASM_V2')">
-            <div class="node-glow"></div>
-            <div class="node-header">03 // C++</div>
-            <div class="node-body">HARDWARE_LEVEL_ACCESS</div>
-            <div class="node-footer">INITIALIZE_UPLINK</div>
+        <div class="node" onclick="launchIDE('javascript')">
+            <span class="type">WEB / LOGIC</span>
+            <h3>JavaScript</h3>
+            <div class="status-dot"></div>
         </div>
-    </div>
-</div>
-
-<main id="ide-stage" style="display: none;">
-    <div id="monaco-root"></div>
-    <div class="terminal-hud">
-        <div class="term-status">ISO_KERNEL_STREAM // FEED_ACTIVE</div>
-        <div id="terminal-content"></div>
+        <div class="node" onclick="launchIDE('cpp')">
+            <span class="type">SYSTEM / WASM</span>
+            <h3>C++ Engine</h3>
+            <div class="status-dot"></div>
+        </div>
+        <div class="node" onclick="launchIDE('sql')">
+            <span class="type">STORAGE</span>
+            <h3>SQL Query</h3>
+            <div class="status-dot"></div>
+        </div>
     </div>
 </main>
+
+<div id="editor-stage" class="view hidden">
+    <div id="monaco-canvas"></div>
+    <div class="aether-console">
+        <div id="output-stream">System Ready...</div>
+    </div>
+</div>
 
 <script src="config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
