@@ -15,9 +15,9 @@
         <span class="logo" onclick="location.reload()">USW NETWORK</span>
     </div>
     <div id="ide-controls" style="display: none;">
-        <button class="btn run" onclick="runCode()">▶ Run</button>
-        <button class="btn deploy" onclick="deployToGithub()">🚀 Deploy</button>
-        <button class="btn exit" onclick="location.reload()">✖ Exit</button>
+        <button class="btn-run" onclick="runCode()">▶ Run Script</button>
+        <button class="btn-deploy" onclick="deployToGithub()">🚀 Deploy Repo</button>
+        <button class="btn-exit" onclick="location.reload()">✖ Exit</button>
     </div>
 </header>
 
@@ -29,34 +29,42 @@
         <button class="filter-btn">Java</button>
         <button class="filter-btn">JavaScript</button>
         <button class="filter-btn">C++</button>
+        <button class="filter-btn">SQL</button>
     </div>
 
     <div class="module-grid">
         <div class="card" onclick="bootIDE('python', 'Python 3.11')">
             <div class="card-tag">Python</div>
             <h3>Python (main)</h3>
-            <p>Standard Python 3.11 with full console support.</p>
+            <p>Readable syntax for AI, Data Science, and Web Development.</p>
             <button class="create-btn">✚ Create New</button>
         </div>
 
         <div class="card" onclick="bootIDE('javascript', 'JS Console')">
             <div class="card-tag">JavaScript</div>
-            <h3>JavaScript Console</h3>
-            <p>Modern ES6 logic for web and algorithms.</p>
+            <h3>JS Console</h3>
+            <p>The language of the web, essential for interactive sites.</p>
             <button class="create-btn">✚ Create New</button>
         </div>
 
         <div class="card" onclick="bootIDE('java', 'Java Virtual')">
             <div class="card-tag">Java</div>
-            <h3>Java (console)</h3>
-            <p>Java logic running in an isolated WASM container.</p>
+            <h3>Java / C#</h3>
+            <p>Enterprise applications and cross-platform development.</p>
             <button class="create-btn">✚ Create New</button>
         </div>
 
         <div class="card" onclick="bootIDE('cpp', 'C++ System')">
             <div class="card-tag">C++</div>
-            <h3>C++ / C High-Speed</h3>
-            <p>For high-performance systems and game logic.</p>
+            <h3>C++ / C</h3>
+            <p>High-performance systems, games, and OS development.</p>
+            <button class="create-btn">✚ Create New</button>
+        </div>
+
+        <div class="card" onclick="bootIDE('sql', 'SQL Lab')">
+            <div class="card-tag">SQL</div>
+            <h3>SQL Database</h3>
+            <p>The standard for querying and managing relational data.</p>
             <button class="create-btn">✚ Create New</button>
         </div>
     </div>
@@ -64,9 +72,9 @@
 
 <main id="editor-view" style="display: none;">
     <div id="monaco-root"></div>
-    <div id="console-pane">
-        <div class="console-head">System Output</div>
-        <div id="terminal-content">Ready...</div>
+    <div id="terminal-pane">
+        <div class="term-head">Isolated Kernel Output</div>
+        <div id="terminal-content">Ready for execution...</div>
     </div>
 </main>
 
