@@ -1,16 +1,14 @@
 let editor, pyodide, activeLang;
 
-// Initialize Editor
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
 require(['vs/editor/editor.main'], function() {
     editor = monaco.editor.create(document.getElementById('monaco-canvas'), {
         theme: 'vs-dark',
         automaticLayout: true,
-        fontSize: 15,
+        fontSize: 14,
         fontFamily: "'JetBrains Mono', monospace",
-        lineNumbers: "off", // Cleaner look
-        roundedSelection: true,
-        scrollBeyondLastLine: false,
+        lineNumbers: "off",
+        minimap: { enabled: false },
         backgroundColor: "#000000"
     });
 });
@@ -22,27 +20,25 @@ async function launchIDE(lang) {
     document.getElementById('runtime-controls').classList.remove('hidden');
     
     const output = document.getElementById('output-stream');
-    const model = editor.getModel();
-    monaco.editor.setModelLanguage(model, lang);
+    monaco.editor.setModelLanguage(editor.getModel(), lang);
 
     if (lang === 'python') {
-        editor.setValue("print('Environment Live')");
+        editor.setValue("print('Node: Python 3.11')");
         if (!pyodide) {
-            output.innerText = "Loading Kernel...";
+            output.innerText = "Initializing WASM Kernel...";
             pyodide = await loadPyodide();
-            output.innerText = "System Online.";
+            output.innerText = "System Active.";
         }
     } else {
-        editor.setValue("// Script Node Ready");
-        output.innerText = "Ready.";
+        editor.setValue(lang === 'html' ? "" : "// Script Node");
+        output.innerText = "Aether Node Ready.";
     }
 }
 
 async function runCode() {
     const output = document.getElementById('output-stream');
     const code = editor.getValue();
-    output.innerText = "Executing...";
-
+    
     try {
         if (activeLang === 'python' && pyodide) {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
@@ -50,13 +46,9 @@ async function runCode() {
             output.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Finished.";
         } else if (activeLang === 'javascript') {
             eval(code);
-            output.innerText = "Success.";
+            output.innerText = "Logic executed.";
         }
     } catch (e) {
-        output.innerText = "Error: " + e;
+        output.innerText = "Fault: " + e;
     }
-}
-
-function deployToGithub() {
-    window.open("https://github.com/new", "_blank");
 }
