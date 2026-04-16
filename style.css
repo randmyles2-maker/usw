@@ -1,63 +1,34 @@
-body {
-    margin: 0;
-    background-color: #0d1117;
-    color: #c9d1d9;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+/* Container & Grid */
+.container { padding: 40px; max-width: 1200px; margin: 0 auto; overflow-y: auto; height: calc(100vh - 100px); }
+
+.filter-bar { display: flex; gap: 10px; margin-bottom: 30px; align-items: center; }
+.filter-btn { 
+    background: #21262d; border: 1px solid #30363d; color: #c9d1d9;
+    padding: 6px 15px; border-radius: 20px; cursor: pointer; font-size: 13px;
+}
+.filter-btn.active { background: #1f6feb; border-color: #388bfd; }
+
+.module-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 20px; 
 }
 
-header {
-    padding: 1rem;
-    background: #161b22;
-    border-bottom: 1px solid #30363d;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* Card Design */
+.card {
+    background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+    padding: 24px; transition: transform 0.2s;
 }
+.card:hover { transform: translateY(-5px); border-color: #8b949e; }
+.card h3 { margin-top: 0; color: #f0f6fc; }
+.card .lang-tag { color: #58a6ff; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+.card .desc { color: #8b949e; font-size: 14px; line-height: 1.5; margin-bottom: 20px; height: 40px; }
 
-#editor-container {
-    flex-grow: 1;
-    padding: 20px;
+.create-btn {
+    background: #238636; color: white; border: none; padding: 10px 20px;
+    border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;
 }
+.create-btn:hover { background: #2ea043; }
 
-textarea {
-    width: 100%;
-    height: 80%;
-    background: #010409;
-    color: #79c0ff;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    padding: 15px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 16px;
-    resize: none;
-    outline: none;
-}
-
-.controls {
-    margin-top: 10px;
-}
-
-button {
-    background-color: #238636;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-button:hover { background-color: #2ea043; }
-
-#output {
-    height: 150px;
-    background: #000;
-    color: #39ff14;
-    padding: 10px;
-    overflow-y: auto;
-    font-family: monospace;
-    border-top: 1px solid #30363d;
-}
+/* Navigation Fix */
+.btn-back { background: #da3633; color: white; }
