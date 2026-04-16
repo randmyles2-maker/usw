@@ -1,48 +1,81 @@
-let editor;
-let pyodide;
+let editor, pyodide, currentLang;
 
-// Load Monaco
+// 1. App Installation (PWA)
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('install-btn').style.display = 'block';
+});
+
+document.getElementById('install-btn').addEventListener('click', async () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt = null;
+    }
+});
+
+// 2. Load Monaco Editor
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
 require(['vs/editor/editor.main'], function() {
     editor = monaco.editor.create(document.getElementById('editor-root'), {
         theme: 'vs-dark',
-        automaticLayout: true
+        automaticLayout: true,
+        fontSize: 15
     });
 });
 
-function openModule(lang) {
-    // UI Swapping
+// 3. Open Selected Module
+async function openIDE(lang, displayName) {
+    currentLang = lang;
     document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('main-container').style.display = 'flex';
-    document.getElementById('editor-nav').style.display = 'flex';
-    
-    // Set Language Template
+    document.getElementById('editor-view').style.display = 'flex';
+    document.getElementById('editor-controls').style.display = 'flex';
+    document.getElementById('active-lang-indicator').innerText = displayName;
+
     const model = editor.getModel();
-    monaco.editor.setModelLanguage(model, lang);
+    monaco.editor.setModelLanguage(model, lang === 'cpp' ? 'cpp' : lang);
     
-    if (lang === 'python') {
-        editor.setValue("import sys\nprint('Python Module Initialized')\nprint(sys.version)");
-        initPython(); // Only load Python engine if needed
-    } else if (lang === 'javascript') {
-        editor.setValue("console.log('JS Module Initialized');");
-    }
-}
+    // Initial Templates
+    const templates = {
+        python: "print('Python Kernel Active')",
+        javascript: "console.log('JavaScript Active');",
+        cpp: "#include <iostream>\nint main() { std::cout << 'C++ Active'; return 0; }",
+        sql: "SELECT 'SQL Kernel Active' AS status;"
+    };
+    editor.setValue(templates[lang] || "// Start coding...");
 
-function showDashboard() {
-    document.getElementById('dashboard').style.display = 'block';
-    document.getElementById('main-container').style.display = 'none';
-    document.getElementById('editor-nav').style.display = 'none';
-}
-
-async function initPython() {
-    if (pyodide) return; // Don't reload if already there
-    const status = document.getElementById('engine-status');
-    try {
+    if (lang === 'python' && !pyodide) {
+        document.getElementById('console').innerText = "Loading Python WASM Engine...";
         pyodide = await loadPyodide();
-        status.innerText = "Python Kernel Ready";
-    } catch (e) {
-        status.innerText = "Kernel Error";
+        document.getElementById('console').innerText = "Python Ready.\n";
     }
 }
 
-// ... Keep your runCode() and deployToGithub() functions from before ...
+// 4. Run & Deploy Functions
+async function runCode() {
+    const terminal = document.getElementById('console');
+    const code = editor.getValue();
+    terminal.innerText = `[Running ${currentLang}]...\n`;
+
+    if (currentLang === 'python') {
+        try {
+            await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
+            await pyodide.runPythonAsync(code);
+            terminal.innerText = pyodide.runPython("sys.stdout.getvalue()");
+        } catch (e) { terminal.innerText = "Error: " + e; }
+    } else if (currentLang === 'javascript') {
+        try {
+            eval(code); 
+            terminal.innerText += "\n(Check Browser Console for detailed logs)";
+        } catch (e) { terminal.innerText = "JS Error: " + e; }
+    } else {
+        terminal.innerText = "Compiled languages (C++/Java) require WASM backend connection.";
+    }
+}
+
+function deployToGithub() {
+    const user = USW_CONFIG.GITHUB.USER;
+    const repo = USW_CONFIG.GITHUB.REPO;
+    window.open(`https://github.com/new?template_name=${repo}&template_owner=${user}`, '_blank');
+}
