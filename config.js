@@ -1,10 +1,15 @@
 const USW_CONFIG = {
     APP_NAME: "USW Network Secure Node",
-    VERSION: "2.0.0",
-    DEFAULT_PYTHON: "print('USW Network: Python Kernel Active')\nprint('Status: Secure')",
-    DEFAULT_JS: "console.log('USW Network: JavaScript Kernel Active');",
+    VERSION: "2.1.0",
+    STATUS: "Stable",
     GITHUB: {
         USER: "randmyles2-maker",
         REPO: "usw"
+    },
+    // Starter templates for the editor
+    TEMPLATES: {
+        python: "# USW Network Python Node\nimport sys\nprint(f'Secure Kernel: {sys.version}')\nprint('Status: Active')",
+        javascript: "// USW Network JS Node\nconsole.log('Browser Kernel Active');\nconsole.log('User Agent:', navigator.userAgent);",
+        cpp: "// C++ Support via WASM (Experimental)\n#include <iostream>\nint main() { std::cout << 'Hello USW'; return 0; }"
     }
 };
