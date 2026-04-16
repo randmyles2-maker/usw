@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>USW // AETHER</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <title>USW</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -20,31 +20,31 @@
 </header>
 
 <main id="dashboard" class="view">
-    <section class="hero-section">
-        <h1>Environments</h1>
-        <p>Select a specialized node to begin.</p>
-    </section>
+    <div class="list-container">
+        <div class="list-header">ENVIRONMENTS</div>
+        
+        <div class="list-item" onclick="launchIDE('html')">
+            <span class="ln">01</span>
+            <span class="title">HTML / CSS</span>
+            <span class="desc">Web Structure</span>
+        </div>
 
-    <div class="aether-grid">
-        <div class="node" onclick="launchIDE('python')">
-            <span class="type">AI / DATA</span>
-            <h3>Python Core</h3>
-            <div class="status-dot"></div>
+        <div class="list-item" onclick="launchIDE('javascript')">
+            <span class="ln">02</span>
+            <span class="title">JavaScript</span>
+            <span class="desc">V8 Runtime</span>
         </div>
-        <div class="node" onclick="launchIDE('javascript')">
-            <span class="type">WEB / LOGIC</span>
-            <h3>JavaScript</h3>
-            <div class="status-dot"></div>
+
+        <div class="list-item" onclick="launchIDE('python')">
+            <span class="ln">03</span>
+            <span class="title">Python</span>
+            <span class="desc">Standard Node</span>
         </div>
-        <div class="node" onclick="launchIDE('cpp')">
-            <span class="type">SYSTEM / WASM</span>
-            <h3>C++ Engine</h3>
-            <div class="status-dot"></div>
-        </div>
-        <div class="node" onclick="launchIDE('sql')">
-            <span class="type">STORAGE</span>
-            <h3>SQL Query</h3>
-            <div class="status-dot"></div>
+
+        <div class="list-item" onclick="launchIDE('python')">
+            <span class="ln">04</span>
+            <span class="title">Python 3</span>
+            <span class="desc">WASM Kernel 3.11</span>
         </div>
     </div>
 </main>
@@ -52,7 +52,7 @@
 <div id="editor-stage" class="view hidden">
     <div id="monaco-canvas"></div>
     <div class="aether-console">
-        <div id="output-stream">System Ready...</div>
+        <div id="output-stream">Ready.</div>
     </div>
 </div>
 
