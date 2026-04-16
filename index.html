@@ -2,71 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>USW Network | Secure Desktop</title>
+    <meta name="viewport" content="width=1200">
+    <title>USW Network | Secure Node</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="desktop-node">
+<body>
 
-<header class="glass">
-    <div class="logo-group">
+<header class="glass-header">
+    <div class="logo-area">
         <span class="logo" onclick="location.reload()">USW NETWORK</span>
     </div>
-    <div id="ide-actions" style="display: none;">
-        <button class="btn run" onclick="runCode()">Run Script</button>
-        <button class="btn deploy" onclick="deployToGithub()">Deploy</button>
-        <button class="btn exit" onclick="location.reload()">Exit</button>
+    <div id="ide-controls" style="display: none;">
+        <button class="btn run" onclick="runCode()">▶ Run</button>
+        <button class="btn deploy" onclick="deployToGithub()">🚀 Deploy</button>
+        <button class="btn exit" onclick="location.reload()">✖ Exit</button>
     </div>
 </header>
 
-<div id="dashboard-view" class="container">
-    <div class="hero">
-        <h1>Select Environment</h1>
-        <p>Isolated WASM Kernels for High-Performance Coding</p>
+<div id="dashboard" class="container">
+    <div class="filter-bar">
+        <span>Languages:</span>
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Python</button>
+        <button class="filter-btn">Java</button>
+        <button class="filter-btn">JavaScript</button>
+        <button class="filter-btn">C++</button>
     </div>
 
     <div class="module-grid">
-        <div class="module-card" onclick="bootIDE('python', 'Python AI')">
-            <div class="badge">AI / Data</div>
-            <h3>Python 3.11</h3>
-            <p>Readable syntax for AI and Web Dev.</p>
-            <div class="card-footer">Initialize Node</div>
+        <div class="card" onclick="bootIDE('python', 'Python 3.11')">
+            <div class="card-tag">Python</div>
+            <h3>Python (main)</h3>
+            <p>Standard Python 3.11 with full console support.</p>
+            <button class="create-btn">✚ Create New</button>
         </div>
 
-        <div class="module-card" onclick="bootIDE('javascript', 'JS Web')">
-            <div class="badge">Frontend</div>
-            <h3>JavaScript</h3>
-            <p>Interactive front-end and web logic.</p>
-            <div class="card-footer">Initialize Node</div>
+        <div class="card" onclick="bootIDE('javascript', 'JS Console')">
+            <div class="card-tag">JavaScript</div>
+            <h3>JavaScript Console</h3>
+            <p>Modern ES6 logic for web and algorithms.</p>
+            <button class="create-btn">✚ Create New</button>
         </div>
 
-        <div class="module-card" onclick="bootIDE('cpp', 'C++ System')">
-            <div class="badge">Performance</div>
-            <h3>C++ / C</h3>
-            <p>Systems, games, and hardware drivers.</p>
-            <div class="card-footer">Initialize Node</div>
+        <div class="card" onclick="bootIDE('java', 'Java Virtual')">
+            <div class="card-tag">Java</div>
+            <h3>Java (console)</h3>
+            <p>Java logic running in an isolated WASM container.</p>
+            <button class="create-btn">✚ Create New</button>
         </div>
 
-        <div class="module-card" onclick="bootIDE('java', 'Java Enterprise')">
-            <div class="badge">Enterprise</div>
-            <h3>Java / C#</h3>
-            <p>Android and Windows enterprise apps.</p>
-            <div class="card-footer">Initialize Node</div>
-        </div>
-
-        <div class="module-card" onclick="bootIDE('sql', 'SQL Data')">
-            <div class="badge">Database</div>
-            <h3>SQL Lab</h3>
-            <p>Standard for querying relational data.</p>
-            <div class="card-footer">Initialize Node</div>
+        <div class="card" onclick="bootIDE('cpp', 'C++ System')">
+            <div class="card-tag">C++</div>
+            <h3>C++ / C High-Speed</h3>
+            <p>For high-performance systems and game logic.</p>
+            <button class="create-btn">✚ Create New</button>
         </div>
     </div>
 </div>
 
 <main id="editor-view" style="display: none;">
     <div id="monaco-root"></div>
-    <div id="output-pane">
-        <div class="pane-label">Terminal Output</div>
+    <div id="console-pane">
+        <div class="console-head">System Output</div>
         <div id="terminal-content">Ready...</div>
     </div>
 </main>
