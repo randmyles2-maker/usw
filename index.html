@@ -3,12 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>USW</title>
+    <title>USW // AETHER</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<div id="auth-overlay">
+    <div class="auth-card">
+        <h1>AETHER ACCESS</h1>
+        <input type="text" id="username" placeholder="IDENTITY">
+        <input type="password" id="password" placeholder="PASSWORD">
+        <div class="auth-buttons">
+            <button onclick="handleAuth('login')">LOGIN</button>
+            <button onclick="handleAuth('signup')" class="secondary">SIGN UP</button>
+        </div>
+        <p id="auth-msg"></p>
+    </div>
+</div>
 
 <header class="aether-nav">
     <div class="brand" onclick="location.reload()">USW NETWORK</div>
@@ -22,29 +35,17 @@
 <main id="dashboard" class="view">
     <div class="list-container">
         <div class="list-header">ENVIRONMENTS</div>
-        
         <div class="list-item" onclick="launchIDE('html')">
-            <span class="ln">01</span>
-            <span class="title">HTML / CSS</span>
-            <span class="desc">Web Structure</span>
+            <span class="ln">01</span><span class="title">HTML / CSS</span><span class="desc">Web Structure</span>
         </div>
-
         <div class="list-item" onclick="launchIDE('javascript')">
-            <span class="ln">02</span>
-            <span class="title">JavaScript</span>
-            <span class="desc">V8 Runtime</span>
+            <span class="ln">02</span><span class="title">JavaScript</span><span class="desc">V8 Runtime</span>
         </div>
-
         <div class="list-item" onclick="launchIDE('python')">
-            <span class="ln">03</span>
-            <span class="title">Python</span>
-            <span class="desc">Standard Node</span>
+            <span class="ln">03</span><span class="title">Python</span><span class="desc">WASM Node</span>
         </div>
-
         <div class="list-item" onclick="launchIDE('python')">
-            <span class="ln">04</span>
-            <span class="title">Python 3</span>
-            <span class="desc">WASM Kernel 3.11</span>
+            <span class="ln">04</span><span class="title">Python 3</span><span class="desc">3.11 Kernel</span>
         </div>
     </div>
 </main>
@@ -56,6 +57,7 @@
     </div>
 </div>
 
+<script src="storage.js"></script>
 <script src="config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
