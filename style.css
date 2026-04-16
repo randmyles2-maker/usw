@@ -1,55 +1,72 @@
 :root {
-    --bg: #0d1117;
-    --card: #161b22;
-    --border: #30363d;
-    --blue: #58a6ff;
-    --green: #238636;
+    --neon-blue: #00f3ff;
+    --neon-pink: #ff00ff;
+    --dark-void: #050505;
+    --matrix-green: #00ff41;
 }
 
-body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
-
-/* Header */
-.glass-header { 
-    height: 70px; display: flex; align-items: center; justify-content: space-between; 
-    padding: 0 40px; background: rgba(22, 27, 34, 0.8); backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+body {
+    background: var(--dark-void);
+    color: var(--neon-blue);
+    font-family: 'JetBrains Mono', monospace;
+    margin: 0;
+    overflow: hidden;
+    text-transform: uppercase;
 }
-.logo { font-weight: 800; font-size: 20px; color: var(--blue); cursor: pointer; letter-spacing: 1px; }
 
-/* Dashboard */
-.container { padding: 50px 40px; max-width: 1300px; margin: 0 auto; }
-.filter-bar { display: flex; gap: 12px; margin-bottom: 40px; align-items: center; color: #8b949e; }
-.filter-btn { 
-    background: var(--card); border: 1px solid var(--border); color: #c9d1d9;
-    padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 13px; transition: 0.2s;
+/* Scanline Effect */
+.scanline {
+    width: 100%; height: 2px;
+    background: rgba(0, 243, 255, 0.1);
+    position: fixed; top: 0; left: 0; z-index: 999;
+    animation: scan 4s linear infinite;
+    pointer-events: none;
 }
-.filter-btn.active { background: #1f6feb; border-color: #388bfd; }
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
-/* Grid & Cards */
-.module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
-.card { 
-    background: var(--card); border: 1px solid var(--border); border-radius: 12px; 
-    padding: 30px; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column;
+.hud-top {
+    height: 80px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 50px; border-bottom: 2px solid var(--neon-blue);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+    background: rgba(0, 0, 0, 0.9);
 }
-.card:hover { border-color: var(--blue); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-.card-tag { color: var(--blue); font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; }
-.card h3 { margin: 0 0 10px 0; color: #f0f6fc; }
-.card p { color: #8b949e; font-size: 14px; line-height: 1.6; flex-grow: 1; margin-bottom: 25px; }
 
-.create-btn { 
-    background: #21262d; color: #c9d1d9; border: 1px solid var(--border); 
-    padding: 12px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s;
+.glitch-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900; font-size: 28px; letter-spacing: 5px;
+    position: relative;
 }
-.card:hover .create-btn { background: var(--green); color: white; border-color: var(--green); }
 
-/* Editor Mode */
-#editor-view { height: calc(100vh - 70px); display: flex; flex-direction: column; }
-#monaco-root { flex-grow: 1; }
-#terminal-pane { height: 220px; background: #000; border-top: 2px solid var(--border); }
-.term-head { background: #161b22; padding: 10px 20px; font-size: 12px; color: #8b949e; font-weight: bold; }
-#terminal-content { padding: 15px 20px; font-family: monospace; color: #39ff14; font-size: 14px; overflow-y: auto; }
+/* Future Cards */
+.matrix-container { padding: 80px; }
+.hex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
 
-/* Action Buttons */
-.btn-run { background: var(--green); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-right: 8px; font-weight: bold; }
-.btn-deploy { background: #8957e5; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-right: 8px; font-weight: bold; }
-.btn-exit { background: #da3633; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.node-card {
+    border: 1px solid var(--neon-blue);
+    padding: 40px; position: relative;
+    background: rgba(0, 243, 255, 0.05);
+    cursor: pointer; transition: 0.3s;
+}
+.node-card:hover {
+    background: rgba(0, 243, 255, 0.2);
+    box-shadow: 0 0 30px var(--neon-blue);
+}
+.node-header { font-size: 22px; margin-bottom: 10px; font-family: 'Orbitron'; }
+.node-body { color: #888; font-size: 12px; margin-bottom: 30px; }
+.node-footer { color: var(--neon-pink); font-weight: bold; font-size: 14px; }
+
+/* IDE UI */
+#ide-stage { height: calc(100vh - 82px); display: flex; flex-direction: column; }
+#monaco-root { flex-grow: 1; border-right: 2px solid var(--neon-blue); }
+.terminal-hud {
+    height: 300px; background: rgba(0, 0, 0, 1);
+    border-top: 2px solid var(--neon-blue); padding: 20px;
+    color: var(--matrix-green);
+}
+
+.neon-btn {
+    background: transparent; border: 1px solid var(--neon-blue);
+    color: var(--neon-blue); padding: 10px 25px; cursor: pointer;
+    font-family: 'Orbitron'; font-size: 12px; transition: 0.3s;
+}
+.neon-btn:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 15px var(--neon-blue); }
