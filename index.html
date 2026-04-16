@@ -2,79 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1200">
-    <title>USW Network | Secure Node</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>USW // NEURAL NODE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="future-ui">
 
-<header class="glass-header">
-    <div class="logo-area">
-        <span class="logo" onclick="location.reload()">USW NETWORK</span>
+<div class="scanline"></div>
+
+<header class="hud-top">
+    <div class="glitch-logo" data-text="USW_NETWORK">USW_NETWORK</div>
+    <div class="system-stats">
+        <span>CPU_LOAD: OPTIMAL</span>
+        <span class="pulse">KERNEL: ACTIVE</span>
     </div>
-    <div id="ide-controls" style="display: none;">
-        <button class="btn-run" onclick="runCode()">▶ Run Script</button>
-        <button class="btn-deploy" onclick="deployToGithub()">🚀 Deploy Repo</button>
-        <button class="btn-exit" onclick="location.reload()">✖ Exit</button>
+    <div id="ide-nav" style="display: none;">
+        <button class="neon-btn run" onclick="runCode()">EXECUTE</button>
+        <button class="neon-btn deploy" onclick="deployToGithub()">UPLINK</button>
+        <button class="neon-btn exit" onclick="location.reload()">TERMINATE</button>
     </div>
 </header>
 
-<div id="dashboard" class="container">
-    <div class="filter-bar">
-        <span>Languages:</span>
-        <button class="filter-btn active">All</button>
-        <button class="filter-btn">Python</button>
-        <button class="filter-btn">Java</button>
-        <button class="filter-btn">JavaScript</button>
-        <button class="filter-btn">C++</button>
-        <button class="filter-btn">SQL</button>
-    </div>
-
-    <div class="module-grid">
-        <div class="card" onclick="bootIDE('python', 'Python 3.11')">
-            <div class="card-tag">Python</div>
-            <h3>Python (main)</h3>
-            <p>Readable syntax for AI, Data Science, and Web Development.</p>
-            <button class="create-btn">✚ Create New</button>
+<div id="matrix-dashboard" class="matrix-container">
+    <div class="interface-label">// SELECT_ENVIRONMENT_ID</div>
+    
+    <div class="hex-grid">
+        <div class="node-card" onclick="bootIDE('python', 'PY_CORE_311')">
+            <div class="node-glow"></div>
+            <div class="node-header">01 // PYTHON</div>
+            <div class="node-body">NEURAL_SCRIPTING_ENGINE</div>
+            <div class="node-footer">INITIALIZE_UPLINK</div>
         </div>
 
-        <div class="card" onclick="bootIDE('javascript', 'JS Console')">
-            <div class="card-tag">JavaScript</div>
-            <h3>JS Console</h3>
-            <p>The language of the web, essential for interactive sites.</p>
-            <button class="create-btn">✚ Create New</button>
+        <div class="node-card" onclick="bootIDE('javascript', 'JS_V8_LOCAL')">
+            <div class="node-glow"></div>
+            <div class="node-header">02 // JAVASCRIPT</div>
+            <div class="node-body">WEB_LOGIC_SYNCHRONIZER</div>
+            <div class="node-footer">INITIALIZE_UPLINK</div>
         </div>
 
-        <div class="card" onclick="bootIDE('java', 'Java Virtual')">
-            <div class="card-tag">Java</div>
-            <h3>Java / C#</h3>
-            <p>Enterprise applications and cross-platform development.</p>
-            <button class="create-btn">✚ Create New</button>
-        </div>
-
-        <div class="card" onclick="bootIDE('cpp', 'C++ System')">
-            <div class="card-tag">C++</div>
-            <h3>C++ / C</h3>
-            <p>High-performance systems, games, and OS development.</p>
-            <button class="create-btn">✚ Create New</button>
-        </div>
-
-        <div class="card" onclick="bootIDE('sql', 'SQL Lab')">
-            <div class="card-tag">SQL</div>
-            <h3>SQL Database</h3>
-            <p>The standard for querying and managing relational data.</p>
-            <button class="create-btn">✚ Create New</button>
+        <div class="node-card" onclick="bootIDE('cpp', 'CPP_WASM_V2')">
+            <div class="node-glow"></div>
+            <div class="node-header">03 // C++</div>
+            <div class="node-body">HARDWARE_LEVEL_ACCESS</div>
+            <div class="node-footer">INITIALIZE_UPLINK</div>
         </div>
     </div>
 </div>
 
-<main id="editor-view" style="display: none;">
+<main id="ide-stage" style="display: none;">
     <div id="monaco-root"></div>
-    <div id="terminal-pane">
-        <div class="term-head">Isolated Kernel Output</div>
-        <div id="terminal-content">Ready for execution...</div>
+    <div class="terminal-hud">
+        <div class="term-status">ISO_KERNEL_STREAM // FEED_ACTIVE</div>
+        <div id="terminal-content"></div>
     </div>
 </main>
 
