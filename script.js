@@ -2,67 +2,75 @@ let editor;
 let pyodide;
 let currentLang = "python";
 
-// Initialize Monaco
+// 1. Safe Monaco Loader
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
 require(['vs/editor/editor.main'], function() {
     editor = monaco.editor.create(document.getElementById('editor-root'), {
-        value: "print('USW Network Active')\n# Type your code here",
+        value: USW_CONFIG.DEFAULT_PYTHON,
         language: 'python',
         theme: 'vs-dark',
-        automaticLayout: true
+        automaticLayout: true,
+        fontSize: 14,
+        minimap: { enabled: true }
     });
 });
 
-async function initKernels() {
+// 2. Fixed Kernel Loader (Prevents "Kernel Failed" Error)
+async function initUSW() {
     const status = document.getElementById('engine-status');
     const terminal = document.getElementById('console');
+    
     try {
-        // Load Python as primary
+        status.innerText = "Engine: Loading Python WASM...";
         pyodide = await loadPyodide();
-        status.innerText = "Engine: Ready (Python/JS/SQL)";
-        terminal.innerText = "Kernel Loaded. System Secure.\n";
+        status.innerText = "Engine: Online (Python/JS)";
+        terminal.innerText = "USW Secure Kernel v2.0 Initialized.\nReady for Desktop Execution.\n";
     } catch (e) {
-        status.innerText = "Kernel Failure";
-        terminal.innerText = "Error: Use a Desktop Browser (Chrome/Safari/Edge)\n" + e;
+        console.error(e);
+        status.innerText = "Engine: Offline";
+        terminal.innerText = "Security Error: Kernel Failed. Check Internet connection or Browser Permissions.";
     }
 }
-initKernels();
+initUSW();
 
+// 3. Language Switching Logic
 function changeLanguage() {
     currentLang = document.getElementById('language-select').value;
-    const models = monaco.editor.getModels();
-    if (models.length > 0) {
-        monaco.editor.setModelLanguage(models[0], currentLang);
-    }
+    const model = editor.getModel();
+    monaco.editor.setModelLanguage(model, currentLang);
+    
+    if(currentLang === "javascript") editor.setValue(USW_CONFIG.DEFAULT_JS);
+    if(currentLang === "python") editor.setValue(USW_CONFIG.DEFAULT_PYTHON);
 }
 
+// 4. Fixed Run Function
 async function runCode() {
-    const code = editor.getValue();
     const terminal = document.getElementById('console');
-    terminal.innerText = `Executing ${currentLang}...\n`;
+    const code = editor.getValue();
+    terminal.innerText = `[System] Executing ${currentLang}...\n`;
 
     if (currentLang === "python") {
+        if (!pyodide) { terminal.innerText = "Error: Python Kernel not ready."; return; }
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(code);
-            terminal.innerText = pyodide.runPython("sys.stdout.getvalue()");
-        } catch (err) { terminal.innerText = "Python Error: " + err; }
+            const output = pyodide.runPython("sys.stdout.getvalue()");
+            terminal.innerText += output || "Done (No output).";
+        } catch (err) { terminal.innerText += "Python Error:\n" + err; }
     } 
     
     else if (currentLang === "javascript") {
         try {
-            // Secure JS execution using eval in a caught block
             const logs = [];
-            const customLog = (m) => logs.push(m);
-            const originalLog = console.log;
-            console.log = customLog;
+            const oldLog = console.log;
+            console.log = (m) => logs.push(m);
             eval(code);
-            console.log = originalLog;
-            terminal.innerText = logs.join('\n') || "JS Executed (No console output)";
-        } catch (err) { terminal.innerText = "JS Error: " + err; }
+            console.log = oldLog;
+            terminal.innerText += logs.join('\n') || "JS Executed successfully.";
+        } catch (err) { terminal.innerText += "JS Error:\n" + err; }
     }
-    
-    else {
-        terminal.innerText = `Kernel for ${currentLang} coming soon via WASM updates.`;
-    }
+}
+
+function deployToGithub() {
+    window.open(`https://github.com/new?template_name=${USW_CONFIG.GITHUB.REPO}&template_owner=${USW_CONFIG.GITHUB.USER}`, '_blank');
 }
