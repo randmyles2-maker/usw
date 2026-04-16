@@ -1,72 +1,79 @@
 :root {
-    --neon-blue: #00f3ff;
-    --neon-pink: #ff00ff;
-    --dark-void: #050505;
-    --matrix-green: #00ff41;
+    --bg: #000000;
+    --surface: #0a0a0a;
+    --border: rgba(255, 255, 255, 0.08);
+    --accent: #ffffff;
+    --text-dim: #888888;
 }
 
 body {
-    background: var(--dark-void);
-    color: var(--neon-blue);
-    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg);
+    color: white;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     margin: 0;
     overflow: hidden;
-    text-transform: uppercase;
 }
 
-/* Scanline Effect */
-.scanline {
-    width: 100%; height: 2px;
-    background: rgba(0, 243, 255, 0.1);
-    position: fixed; top: 0; left: 0; z-index: 999;
-    animation: scan 4s linear infinite;
-    pointer-events: none;
-}
-@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+.hidden { display: none !important; }
 
-.hud-top {
-    height: 80px; display: flex; align-items: center; justify-content: space-between;
-    padding: 0 50px; border-bottom: 2px solid var(--neon-blue);
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
-    background: rgba(0, 0, 0, 0.9);
+/* Header */
+.aether-nav {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    border-bottom: 1px solid var(--border);
 }
 
-.glitch-logo {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900; font-size: 28px; letter-spacing: 5px;
-    position: relative;
+.brand { font-weight: 700; letter-spacing: -0.5px; cursor: pointer; }
+
+/* Dashboard */
+.hero-section { padding: 80px 40px 40px; }
+.hero-section h1 { font-size: 42px; margin: 0; font-weight: 700; }
+.hero-section p { color: var(--text-dim); margin: 10px 0 0; }
+
+.aether-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
 }
 
-/* Future Cards */
-.matrix-container { padding: 80px; }
-.hex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-
-.node-card {
-    border: 1px solid var(--neon-blue);
-    padding: 40px; position: relative;
-    background: rgba(0, 243, 255, 0.05);
-    cursor: pointer; transition: 0.3s;
-}
-.node-card:hover {
-    background: rgba(0, 243, 255, 0.2);
-    box-shadow: 0 0 30px var(--neon-blue);
-}
-.node-header { font-size: 22px; margin-bottom: 10px; font-family: 'Orbitron'; }
-.node-body { color: #888; font-size: 12px; margin-bottom: 30px; }
-.node-footer { color: var(--neon-pink); font-weight: bold; font-size: 14px; }
-
-/* IDE UI */
-#ide-stage { height: calc(100vh - 82px); display: flex; flex-direction: column; }
-#monaco-root { flex-grow: 1; border-right: 2px solid var(--neon-blue); }
-.terminal-hud {
-    height: 300px; background: rgba(0, 0, 0, 1);
-    border-top: 2px solid var(--neon-blue); padding: 20px;
-    color: var(--matrix-green);
+.node {
+    background: var(--bg);
+    padding: 40px;
+    cursor: pointer;
+    transition: background 0.4s;
 }
 
-.neon-btn {
-    background: transparent; border: 1px solid var(--neon-blue);
-    color: var(--neon-blue); padding: 10px 25px; cursor: pointer;
-    font-family: 'Orbitron'; font-size: 12px; transition: 0.3s;
+.node:hover { background: var(--surface); }
+.node .type { font-size: 11px; font-weight: 700; color: var(--text-dim); }
+.node h3 { margin: 15px 0; font-size: 20px; }
+.node .status-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+
+/* Editor & Console */
+#editor-stage { height: calc(100vh - 71px); display: flex; flex-direction: column; }
+#monaco-canvas { flex-grow: 1; }
+
+.aether-console {
+    height: 180px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 20px 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    overflow-y: auto;
 }
-.neon-btn:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 15px var(--neon-blue); }
+
+/* Controls */
+.action-btn {
+    background: white; color: black; border: none;
+    padding: 8px 18px; border-radius: 4px; font-weight: 700;
+    font-size: 13px; cursor: pointer; margin-left: 10px;
+}
+
+.close-icon { background: none; border: none; color: white; font-size: 20px; cursor: pointer; margin-left: 20px; }
