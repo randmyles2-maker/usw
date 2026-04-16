@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1200"> <title>USW Network | Secure Desktop IDE</title>
+    <title>USW Network | Multi-Lang Secure IDE</title>
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,10 +11,16 @@
 <header>
     <div class="logo-area">
         <span class="logo">USW Network</span>
-        <span class="tagline">Secure Node</span>
+        <select id="language-select" onchange="changeLanguage()">
+            <option value="python">Python 3.11</option>
+            <option value="javascript">JavaScript (ES6)</option>
+            <option value="cpp">C++ (WASM CLANG)</option>
+            <option value="sql">SQL (SQLite)</option>
+            <option value="php">PHP 8.x</option>
+        </select>
     </div>
     <div class="nav-buttons">
-        <button class="btn-run" onclick="executePython()">Run Script</button>
+        <button class="btn-run" onclick="runCode()">Run Script</button>
         <button class="btn-deploy" onclick="deployToGithub()">Deploy Repo</button>
     </div>
 </header>
@@ -23,13 +29,13 @@
     <div id="editor-root"></div>
     <div id="console-container">
         <div class="console-header">Isolated Kernel Output</div>
-        <div id="console">Verifying Desktop Environment...</div>
+        <div id="console">Initializing USW Multi-Language Environment...</div>
     </div>
 </main>
 
 <footer>
-    <span>Secure Session Active</span>
-    <span class="status" id="engine-status">Engine: Connecting...</span>
+    <span id="os-branding">USW Secure Desktop Node</span>
+    <span class="status" id="engine-status">Engine: Waiting...</span>
 </footer>
 
 <script src="config.js"></script>
