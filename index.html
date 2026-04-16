@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>USW Network | Secure Node</title>
+    <title>USW Network | Developer Dashboard</title>
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -10,28 +10,59 @@
 
 <header>
     <div class="logo-area">
-        <span class="logo">USW Network</span>
-        <select id="language-select" onchange="changeLanguage()">
-            <option value="python">Python</option>
-            <option value="javascript">JavaScript</option>
-        </select>
+        <span class="logo" onclick="showDashboard()">USW Network</span>
     </div>
-    <div class="nav-buttons">
-        <button class="btn-run" onclick="runCode()">Run Script</button>
-        <button class="btn-deploy" onclick="deployToGithub()">Deploy Repo</button>
+    <div class="nav-buttons" id="editor-nav" style="display: none;">
+        <button class="btn-run" onclick="runCode()">▶ Run</button>
+        <button class="btn-deploy" onclick="deployToGithub()">🚀 Deploy</button>
+        <button class="btn-back" onclick="showDashboard()">✖ Exit</button>
     </div>
 </header>
 
-<main id="main-container">
-    <div id="editor-root" style="height: 100%; width: 100%;"></div>
+<div id="dashboard" class="container">
+    <div class="filter-bar">
+        <span>Languages:</span>
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Python</button>
+        <button class="filter-btn">JavaScript</button>
+        <button class="filter-btn">SQL</button>
+        <button class="filter-btn">C++</button>
+    </div>
+
+    <div class="module-grid">
+        <div class="card">
+            <h3>Python (main)</h3>
+            <p class="lang-tag">Python</p>
+            <p class="desc">Standard Python 3.11 with full console support.</p>
+            <button class="create-btn" onclick="openModule('python')">✚ Create New</button>
+        </div>
+
+        <div class="card">
+            <h3>JS Console</h3>
+            <p class="lang-tag">JavaScript</p>
+            <p class="desc">Modern ES6 JavaScript for web logic and algorithms.</p>
+            <button class="create-btn" onclick="openModule('javascript')">✚ Create New</button>
+        </div>
+
+        <div class="card">
+            <h3>SQL Database</h3>
+            <p class="lang-tag">SQL</p>
+            <p class="desc">Relational database querying with SQLite WASM.</p>
+            <button class="create-btn" onclick="openModule('sql')">✚ Create New</button>
+        </div>
+    </div>
+</div>
+
+<main id="main-container" style="display: none;">
+    <div id="editor-root"></div>
     <div id="console-container">
-        <div class="console-header">System Output</div>
-        <div id="console">Loading Secure Environment...</div>
+        <div class="console-header">Isolated Output</div>
+        <div id="console">Initializing...</div>
     </div>
 </main>
 
 <footer>
-    <span id="engine-status">Engine: Initializing...</span>
+    <span id="engine-status">Secure Desktop Environment</span>
 </footer>
 
 <script src="config.js"></script>
