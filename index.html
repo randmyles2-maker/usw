@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1200"> <title>USW Network | Secure Desktop IDE</title>
-    
+    <title>USW Network | Secure Node</title>
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,28 +12,26 @@
     <div class="logo-area">
         <span class="logo">USW Network</span>
         <select id="language-select" onchange="changeLanguage()">
-            <option value="python">Python 3.11</option>
+            <option value="python">Python</option>
             <option value="javascript">JavaScript</option>
-            <option value="cpp">C++ (WASM)</option>
         </select>
     </div>
     <div class="nav-buttons">
-        <button class="btn-run" onclick="runCode()">▶ Run Script</button>
-        <button class="btn-deploy" onclick="deployToGithub()">🚀 Deploy Repo</button>
+        <button class="btn-run" onclick="runCode()">Run Script</button>
+        <button class="btn-deploy" onclick="deployToGithub()">Deploy Repo</button>
     </div>
 </header>
 
 <main id="main-container">
-    <div id="editor-root"></div>
+    <div id="editor-root" style="height: 100%; width: 100%;"></div>
     <div id="console-container">
-        <div class="console-header">Isolated Output Console</div>
-        <div id="console">Initializing USW Virtual Environment...</div>
+        <div class="console-header">System Output</div>
+        <div id="console">Loading Secure Environment...</div>
     </div>
 </main>
 
 <footer>
-    <div id="session-info">Session: Secure | Mode: Desktop Only</div>
-    <div id="engine-status">Engine: Connecting...</div>
+    <span id="engine-status">Engine: Initializing...</span>
 </footer>
 
 <script src="config.js"></script>
