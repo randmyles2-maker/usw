@@ -2,75 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1200">
-    <title>USW Network | Secure Node</title>
-    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=1200, initial-scale=1.0">
+    <title>USW Network | Secure Desktop Node</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a0c10">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="desktop-only">
 
-<header>
+<header class="glass-header">
     <div class="logo-area">
-        <span class="logo" onclick="location.reload()">USW Network</span>
+        <span class="logo-icon">▲</span>
+        <span class="logo-text">USW</span>
+        <span class="logo-subtext">Secure Node</span>
     </div>
-    <div id="editor-controls" style="display: none;">
-        <span id="active-lang-indicator"></span>
-        <button class="btn-run" onclick="runCode()">▶ Run</button>
-        <button class="btn-deploy" onclick="deployToGithub()">🚀 Deploy</button>
-        <button class="btn-exit" onclick="location.reload()">✖ Exit</button>
+    <div id="editor-nav" style="display: none;">
+        <span id="active-module"></span>
+        <button class="btn-primary" onclick="runCode()">▶ Run</button>
+        <button class="btn-secondary" onclick="deployToGithub()">🚀 Deploy</button>
+        <button class="btn-danger" onclick="closeEditor()">✖ Exit</button>
     </div>
-    <button id="install-btn" style="display:none;">⬇ Install App</button>
+    <div id="dashboard-nav">
+        <button id="install-btn" class="pwa-badge" style="display:none;">⬇ Install App</button>
+    </div>
 </header>
 
 <div id="dashboard" class="container">
+    <div class="filter-bar">
+        <button class="filter-btn active">All Systems</button>
+        <button class="filter-btn">Python</button>
+        <button class="filter-btn">Java</button>
+        <button class="filter-btn">WASM</button>
+    </div>
+
     <div class="module-grid">
-        <div class="card" onclick="openIDE('python', 'Python 3.11')">
-            <div class="icon">🐍</div>
-            <h3>Python</h3>
-            <p>AI, Data Science, and Scripting.</p>
-            <button class="create-btn">Create New</button>
+        <div class="card glass-card" onclick="bootModule('python', 'Python AI Node')">
+            <div class="card-icon">🐍</div>
+            <div class="card-content">
+                <h3>Python 3.11 Kernel</h3>
+                <p>AI, Data Science, and secure logic execution.</p>
+            }
+            <div class="card-action">Initialize</div>
         </div>
-        <div class="card" onclick="openIDE('javascript', 'JS Console')">
-            <div class="icon">🌐</div>
-            <h3>JavaScript</h3>
-            <p>Web logic and Frontend interactive code.</p>
-            <button class="create-btn">Create New</button>
+
+        <div class="card glass-card diagnostic" onclick="performDiag()">
+            <div class="card-icon diags">⚙️</div>
+            <div class="card-content">
+                <h3>System Performance</h3>
+                <p>Verify Desktop Browser and CPU WASM speed.</p>
+            }
+            <div class="card-action check">Check Node</div>
         </div>
-        <div class="card" onclick="openIDE('cpp', 'C++ (WASM)')">
-            <div class="icon">⚙️</div>
-            <h3>C++</h3>
-            <p>High-performance systems and game logic.</p>
-            <button class="create-btn">Create New</button>
-        </div>
-        <div class="card" onclick="openIDE('sql', 'SQL Lab')">
-            <div class="icon">📊</div>
-            <h3>SQL</h3>
-            <p>Database querying and table management.</p>
-            <button class="create-btn">Create New</button>
-        </div>
-        <div class="card" onclick="openIDE('java', 'Java Virtual')">
-            <div class="icon">☕</div>
-            <h3>Java</h3>
-            <p>Enterprise logic and OOP development.</p>
-            <button class="create-btn">Create New</button>
-        </div>
-        <div class="card" onclick="openIDE('php', 'PHP Serverless')">
-            <div class="icon">🐘</div>
-            <h3>PHP</h3>
-            <p>Backend web development logic.</p>
-            <button class="create-btn">Create New</button>
+
+        <div class="card glass-card compiled" onclick="bootModule('java', 'Java Virtual Node')">
+            <div class="card-icon">☕</div>
+            <div class="card-content">
+                <h3>Java WASM (Coming Soon)</h3>
+                <p>Sandbox for Object-Oriented and Android development.</p>
+            }
+            <div class="card-action disabled">WASM Connection</div>
         </div>
     </div>
 </div>
 
-<main id="editor-view" style="display: none;">
-    <div id="editor-root"></div>
-    <div id="console-container">
-        <div class="console-header">Kernel Output</div>
-        <div id="console">Ready...</div>
+<main id="editor-stage" style="display: none;">
+    <div id="editor-canvas"></div>
+    <div id="terminal-pane">
+        <div class="term-head">Isolated Kernel Stream</div>
+        <div id="console-stream">Initializing...</div>
     </div>
 </main>
+
+<footer>
+    <div class="f-left">USW Node v2.2 | Session: Secure</div>
+    <div class="f-right" id="engine-info">System Online</div>
+</footer>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
+</script>
 
 <script src="config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
