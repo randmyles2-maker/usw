@@ -1,59 +1,59 @@
-let editor;
-let pyodide;
-let activeID;
+let editor, pyodide, activeLang;
 
-// Initial Monaco Setup
+// Initialize Editor
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
 require(['vs/editor/editor.main'], function() {
-    editor = monaco.editor.create(document.getElementById('monaco-root'), {
+    editor = monaco.editor.create(document.getElementById('monaco-canvas'), {
         theme: 'vs-dark',
         automaticLayout: true,
-        fontSize: 16,
+        fontSize: 15,
         fontFamily: "'JetBrains Mono', monospace",
-        lineNumbers: "on",
-        glyphMargin: true
+        lineNumbers: "off", // Cleaner look
+        roundedSelection: true,
+        scrollBeyondLastLine: false,
+        backgroundColor: "#000000"
     });
 });
 
-async function bootIDE(id, label) {
-    activeID = id;
-    document.getElementById('matrix-dashboard').style.display = 'none';
-    document.getElementById('ide-stage').style.display = 'flex';
-    document.getElementById('ide-nav').style.display = 'flex';
+async function launchIDE(lang) {
+    activeLang = lang;
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('editor-stage').classList.remove('hidden');
+    document.getElementById('runtime-controls').classList.remove('hidden');
     
-    const term = document.getElementById('terminal-content');
+    const output = document.getElementById('output-stream');
     const model = editor.getModel();
-    monaco.editor.setModelLanguage(model, id === 'python' ? 'python' : 'javascript');
+    monaco.editor.setModelLanguage(model, lang);
 
-    if (id === 'python') {
-        editor.setValue("# NEURAL_NODE_ACTIVE\nprint('ACCESSING_KERNELS...')");
+    if (lang === 'python') {
+        editor.setValue("print('Environment Live')");
         if (!pyodide) {
-            term.innerText = ">> INJECTING_WASM_PYTHON_RUNTIME...\n";
+            output.innerText = "Loading Kernel...";
             pyodide = await loadPyodide();
-            term.innerText += ">> UPLINK_SUCCESSFUL.\n";
+            output.innerText = "System Online.";
         }
     } else {
-        editor.setValue("// WEB_V8_UPLINK_READY");
-        term.innerText = ">> STANDBY_FOR_INPUT...";
+        editor.setValue("// Script Node Ready");
+        output.innerText = "Ready.";
     }
 }
 
 async function runCode() {
-    const term = document.getElementById('terminal-content');
+    const output = document.getElementById('output-stream');
     const code = editor.getValue();
-    term.innerText = ">> EXECUTING_SEQUENCE...\n";
+    output.innerText = "Executing...";
 
     try {
-        if (activeID === 'python' && pyodide) {
+        if (activeLang === 'python' && pyodide) {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(code);
-            term.innerText = ">> RESULT_STREAM: \n" + pyodide.runPython("sys.stdout.getvalue()");
-        } else {
+            output.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Finished.";
+        } else if (activeLang === 'javascript') {
             eval(code);
-            term.innerText += ">> LOCAL_EXEC_COMPLETE.";
+            output.innerText = "Success.";
         }
     } catch (e) {
-        term.innerText = ">> CRITICAL_ERROR: " + e;
+        output.innerText = "Error: " + e;
     }
 }
 
