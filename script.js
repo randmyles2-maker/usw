@@ -1,6 +1,6 @@
 let editor, pyodide, activeLang, currentUser = null;
 
-// Auto-Login & PWA Initialization
+// PWA & Session Logic
 window.addEventListener('load', () => {
     const saved = sessionStorage.getItem('usw_user');
     if (saved) {
@@ -9,7 +9,7 @@ window.addEventListener('load', () => {
         updateSidebar();
     }
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('server.js').catch(() => {});
+        navigator.serviceWorker.register('./server.js');
     }
 });
 
@@ -28,7 +28,7 @@ function handleAuth(type) {
     const p = document.getElementById('password').value;
     const msg = document.getElementById('auth-msg');
     if (type === 'signup') {
-        if(USW_DATA.saveUser(u, p)) msg.innerText = "SUCCESS. LOGIN.";
+        if(USW_DATA.saveUser(u, p)) msg.innerText = "CREATED. LOGIN.";
         else msg.innerText = "ID TAKEN.";
     } else {
         if (USW_DATA.verifyUser(u, p)) {
@@ -52,9 +52,9 @@ async function launchIDE(lang, isNew) {
     editor.setValue(isNew ? "" : (USW_DATA.loadCode(currentUser, lang) || ""));
 
     if (lang === 'python' && !pyodide) {
-        document.getElementById('output-stream').innerText = "SYSTEM: MOUNTING PYTHON...";
+        document.getElementById('output-stream').innerText = "SYSTEM: MOUNTING...";
         pyodide = await loadPyodide();
-        document.getElementById('output-stream').innerText = "SYSTEM: ONLINE.";
+        document.getElementById('output-stream').innerText = "SYSTEM: READY.";
     }
 }
 
@@ -70,15 +70,20 @@ async function runCode() {
         } else if (activeLang === 'javascript') {
             const runner = new Function(code);
             runner();
-            out.innerText = "JS: EXECUTED (Check Console)";
+            out.innerText = "JS: EXECUTED.";
         } else if (activeLang === 'html') {
             const win = window.open();
             win.document.write(code);
             out.innerText = "HTML: RENDERED.";
         }
-    } catch (e) {
-        out.innerText = "ERR: " + e.message;
-    }
+    } catch (e) { out.innerText = "ERR: " + e.message; }
+}
+
+function backToMenu() {
+    document.getElementById('editor-stage').classList.add('hidden');
+    document.getElementById('runtime-controls').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    updateSidebar();
 }
 
 function updateSidebar() {
@@ -95,15 +100,7 @@ function updateSidebar() {
     });
 }
 
-function backToMenu() {
-    document.getElementById('editor-stage').classList.add('hidden');
-    document.getElementById('runtime-controls').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
-    updateSidebar();
-}
-
 function deployToGithub() {
     USW_DATA.saveCode(currentUser, activeLang, editor.getValue());
-    document.getElementById('output-stream').innerText = "SYSTEM: SNAPSHOT SAVED.";
     updateSidebar();
 }
