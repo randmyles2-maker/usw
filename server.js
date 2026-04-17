@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aether-cache-v1';
+\const CACHE_NAME = 'aether-v2'; // Increment this when you update
 const ASSETS = [
     './',
     './index.html',
@@ -9,22 +9,25 @@ const ASSETS = [
     './icon-512.png'
 ];
 
-// Install & Cache
-self.addEventListener('install', (event) => {
-    event.waitUntil(
+self.addEventListener('install', (e) => {
+    e.waitUntil(
         caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
     );
     self.skipWaiting();
 });
 
-// Activation
-self.addEventListener('activate', (event) => {
-    event.waitUntil(clients.claim());
+self.addEventListener('activate', (e) => {
+    e.waitUntil(
+        caches.keys().then((keys) => {
+            return Promise.all(keys.map((key) => {
+                if (key !== CACHE_NAME) return caches.delete(key);
+            }));
+        })
+    );
 });
 
-// Fetch Interceptor (Required for PWA Install)
-self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        fetch(event.request).catch(() => caches.match(event.request))
+self.addEventListener('fetch', (e) => {
+    e.respondWith(
+        fetch(e.request).catch(() => caches.match(e.request))
     );
 });
