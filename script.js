@@ -1,55 +1,49 @@
 let editor, pyodide, activeLang, currentUser = null;
 
-// 1. BOOT ENGINE & AUTO-LOGIN
+// Register Service Worker for PWA (Downloadable App)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('server.js');
+    });
+}
+
+// Session Recovery
 window.onload = () => {
-    // Check if we are already logged in from a previous session
-    const savedSession = sessionStorage.getItem('usw_active_user');
-    if (savedSession) {
-        currentUser = savedSession;
+    const saved = sessionStorage.getItem('usw_user');
+    if (saved) {
+        currentUser = saved;
         document.getElementById('auth-overlay').classList.add('hidden');
         updateSidebar();
-        console.log("Session Restored:", currentUser);
     }
 };
 
-// 2. MAXED SERVER (Service Worker)
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('server.js');
-}
+// Monaco Init
+require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
+require(['vs/editor/editor.main'], function() {
+    editor = monaco.editor.create(document.getElementById('monaco-canvas'), {
+        theme: 'vs-dark', automaticLayout: true, fontSize: 16, 
+        fontFamily: "'JetBrains Mono'", lineNumbers: "on", minimap: { enabled: false },
+        padding: { top: 20 }
+    });
+});
 
-// 3. AUTH LOGIC (With Session Saving)
 function handleAuth(type) {
     const u = document.getElementById('username').value;
     const p = document.getElementById('password').value;
     const msg = document.getElementById('auth-msg');
-
     if (type === 'signup') {
-        if (USW_DATA.saveUser(u, p)) msg.innerText = "IDENTITY_CREATED. LOGIN.";
-        else msg.innerText = "ID_TAKEN.";
+        USW_DATA.saveUser(u, p);
+        msg.innerText = "CREATED. LOGIN.";
     } else {
         if (USW_DATA.verifyUser(u, p)) {
             currentUser = u;
-            // SAVE SESSION so reload doesn't trigger login
-            sessionStorage.setItem('usw_active_user', u);
+            sessionStorage.setItem('usw_user', u);
             document.getElementById('auth-overlay').classList.add('hidden');
             updateSidebar();
-        } else {
-            msg.innerText = "INVALID_ACCESS.";
-        }
+        } else msg.innerText = "FAILED.";
     }
 }
 
-// 4. EDITOR INIT
-require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
-require(['vs/editor/editor.main'], function() {
-    editor = monaco.editor.create(document.getElementById('monaco-canvas'), {
-        theme: 'vs-dark', automaticLayout: true, fontSize: 14, 
-        fontFamily: "'JetBrains Mono'", lineNumbers: "off", minimap: { enabled: false },
-        backgroundColor: "#00000000"
-    });
-});
-
-// 5. CORE FUNCTIONS
 function updateSidebar() {
     const list = document.getElementById('saved-files-list');
     const users = JSON.parse(localStorage.getItem('usw_users') || '{}');
@@ -58,7 +52,8 @@ function updateSidebar() {
     Object.keys(snippets).forEach(lang => {
         const div = document.createElement('div');
         div.className = 'saved-item';
-        div.innerText = `archive_${lang}.src`;
+        div.innerText = `recover_${lang}.src`;
+        div.style = "padding:10px; cursor:pointer; font-size:12px; border-bottom:1px solid #222";
         div.onclick = () => launchIDE(lang, false);
         list.appendChild(div);
     });
@@ -74,14 +69,10 @@ async function launchIDE(lang, isNew) {
     editor.setValue(isNew ? "" : (USW_DATA.loadCode(currentUser, lang) || ""));
 
     if (lang.includes('python') && !pyodide) {
+        document.getElementById('output-stream').innerText = "SYSTEM: Loading Python...";
         pyodide = await loadPyodide();
+        document.getElementById('output-stream').innerText = "SYSTEM: Ready.";
     }
-}
-
-function deployToGithub() {
-    USW_DATA.saveCode(currentUser, activeLang, editor.getValue());
-    updateSidebar();
-    window.open("https://github.com/new", "_blank");
 }
 
 function backToMenu() {
@@ -97,10 +88,17 @@ async function runCode() {
         if (activeLang.includes('python')) {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editor.getValue());
-            out.innerText = pyodide.runPython("sys.stdout.getvalue()");
+            out.innerText = "PY: " + pyodide.runPython("sys.stdout.getvalue()");
         } else {
             eval(editor.getValue());
-            out.innerText = "Executed.";
+            out.innerText = "JS: Logic Applied.";
         }
-    } catch (e) { out.innerText = e; }
+    } catch (e) { out.innerText = "ERR: " + e; }
+}
+
+function deployToGithub() {
+    USW_DATA.saveCode(currentUser, activeLang, editor.getValue());
+    document.getElementById('output-stream').innerText = "SYSTEM: Snapshot Saved.";
+    updateSidebar();
+    window.open("https://github.com/new", "_blank");
 }
