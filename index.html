@@ -12,21 +12,21 @@
 <div id="auth-overlay">
     <div class="auth-card">
         <h1>AETHER ACCESS</h1>
-        <input type="text" id="username" placeholder="IDENTITY" autocomplete="off">
+        <input type="text" id="username" placeholder="IDENTITY">
         <input type="password" id="password" placeholder="PASSWORD">
         <div class="auth-buttons">
             <button onclick="handleAuth('login')">LOGIN</button>
-            <button onclick="handleAuth('signup')" class="secondary">SIGN UP</button>
+            <button onclick="handleAuth('signup')" class="secondary" style="background:transparent; color:white; border:1px solid #333">SIGN UP</button>
         </div>
-        <p id="auth-msg"></p>
+        <p id="auth-msg" style="font-size:10px; color:red; margin-top:10px;"></p>
     </div>
 </div>
 
 <header class="aether-nav">
-    <div class="brand" onclick="pingServer()">USW NETWORK</div>
+    <div class="brand">USW NETWORK</div>
     <div id="runtime-controls" class="hidden">
-        <button class="action-btn run" onclick="runCode()">Run</button>
-        <button class="action-btn deploy" onclick="deployToGithub()">Deploy</button>
+        <button class="action-btn" onclick="runCode()">Run</button>
+        <button class="action-btn" onclick="deployToGithub()">Deploy</button>
         <button class="close-icon" onclick="backToMenu()">✕</button>
     </div>
 </header>
@@ -36,29 +36,23 @@
         <div class="sidebar-label">ARCHIVED_NODES</div>
         <div id="saved-files-list"></div>
     </aside>
-
     <div class="list-container">
         <div class="list-header">NEW_ENVIRONMENTS</div>
         <div class="list-item" onclick="launchIDE('html', true)">
-            <span class="ln">01</span><span class="title">HTML / CSS</span><span class="desc">New Session</span>
+            <span class="title">HTML / CSS</span>
         </div>
         <div class="list-item" onclick="launchIDE('javascript', true)">
-            <span class="ln">02</span><span class="title">JavaScript</span><span class="desc">New Session</span>
+            <span class="title">JavaScript</span>
         </div>
         <div class="list-item" onclick="launchIDE('python', true)">
-            <span class="ln">03</span><span class="title">Python Node</span><span class="desc">New Session</span>
-        </div>
-        <div class="list-item" onclick="launchIDE('python', true)">
-            <span class="ln">04</span><span class="title">Python 3</span><span class="desc">New Session</span>
+            <span class="title">Python 3</span>
         </div>
     </div>
 </main>
 
 <div id="editor-stage" class="view hidden">
     <div id="monaco-canvas"></div>
-    <div class="aether-console">
-        <div id="output-stream">Ready.</div>
-    </div>
+    <div class="aether-console"><div id="output-stream">Ready.</div></div>
 </div>
 
 <script src="storage.js"></script>
