@@ -1,54 +1,65 @@
 :root { 
     --bg: #000; 
     --border: rgba(255,255,255,0.1); 
-    --text-dim: #666; 
+    --accent: #fff;
 }
 
 body { 
-    margin: 0; 
-    padding: 0;
-    background-color: #000;
-    /* This creates a deep, moving nebula effect */
-    background-image: 
-        radial-gradient(at 0% 0%, rgba(25, 25, 50, 0.5) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(20, 20, 20, 0.5) 0px, transparent 50%),
-        radial-gradient(at 50% 50%, rgba(10, 10, 15, 0.5) 0px, transparent 50%);
-    background-attachment: fixed;
-    color: white; 
-    font-family: 'Plus Jakarta Sans', sans-serif; 
-    overflow: hidden;
-    height: 100vh;
+    margin: 0; padding: 0; background: #000; color: white;
+    font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; height: 100vh;
 }
 
-/* Add a subtle animation to the background */
-body {
-    animation: moveGradient 15s infinite alternate ease-in-out;
-    background-size: 200% 200%;
+/* Moving Nebula Background - Subtle so it doesn't distract */
+body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(circle at 50% 50%, #111, #000);
+    animation: pulse 10s infinite alternate;
 }
-
-@keyframes moveGradient {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 100% 100%; }
-}
+@keyframes pulse { from { opacity: 0.8; } to { opacity: 1; } }
 
 .hidden { display: none !important; }
 
-/* Dashboard & Glassmorphism */
-#dashboard { display: flex; height: calc(100vh - 60px); position: relative; z-index: 10; }
-.sidebar { width: 260px; border-right: 1px solid var(--border); padding: 40px 20px; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); }
-.list-container { flex-grow: 1; padding: 60px 100px; background: rgba(255,255,255,0.02); overflow-y: auto; }
+/* Navigation */
+.aether-nav { 
+    height: 60px; display: flex; align-items: center; justify-content: space-between; 
+    padding: 0 30px; border-bottom: 1px solid var(--border); background: #000;
+}
+.nav-left { display: flex; align-items: center; gap: 40px; }
+.brand { font-weight: 600; font-size: 14px; letter-spacing: 2px; }
 
-/* List Items */
-.list-item { display: flex; align-items: center; padding: 30px 0; border-top: 1px solid var(--border); cursor: pointer; transition: 0.3s; }
-.list-item:hover { background: rgba(255,255,255,0.05); padding-left: 20px; }
-.list-item .title { font-size: 24px; font-weight: 200; flex: 1; }
+/* The "Server" Console - Now a slim status bar in the header */
+.terminal-mini { 
+    font-family: 'JetBrains Mono'; font-size: 11px; color: #00ffaa; 
+    padding: 4px 12px; border-left: 1px solid var(--border); 
+}
 
-/* Auth Layer */
-#auth-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-.auth-card { width: 300px; text-align: center; background: rgba(20,20,20,0.8); padding: 40px; border: 1px solid var(--border); border-radius: 8px; }
-.auth-card input { width: 100%; background: #111; border: 1px solid var(--border); padding: 12px; margin-bottom: 10px; color: white; border-radius: 4px; box-sizing: border-box; }
-.auth-buttons button { width: 48%; padding: 10px; cursor: pointer; border: none; font-weight: bold; }
+/* Layouts */
+#dashboard { display: flex; height: calc(100vh - 60px); }
+.sidebar { 
+    width: 240px; border-right: 1px solid var(--border); 
+    background: rgba(10,10,10,0.8); padding: 30px 15px;
+}
+.list-container { flex-grow: 1; padding: 60px; overflow-y: auto; }
 
-/* Header & Console */
-.aether-nav { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.8); }
-.aether-console { height: 150px; background: rgba(0,0,0,0.9); border-top: 1px solid var(--border); padding: 20px 40px; font-family: 'JetBrains Mono'; color: #888; }
+/* LIST ITEMS */
+.list-item { 
+    padding: 25px; border-top: 1px solid var(--border); cursor: pointer; transition: 0.2s; 
+}
+.list-item:hover { background: rgba(255,255,255,0.05); }
+.list-item .title { font-size: 22px; font-weight: 200; }
+
+/* EDITOR - FULL SCREEN TYPEABILITY */
+#editor-stage { height: calc(100vh - 60px); width: 100%; }
+#monaco-canvas { 
+    height: 100%; width: 100%; 
+    background: #000 !important; /* Forces visibility */
+}
+
+/* Auth Overlay */
+#auth-overlay { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; }
+.auth-card { width: 280px; text-align: center; }
+.auth-card input { 
+    width: 100%; background: #111; border: 1px solid var(--border); 
+    padding: 12px; margin-bottom: 10px; color: white; border-radius: 4px; box-sizing: border-box;
+}
+.action-btn { background: white; border: none; padding: 8px 16px; font-weight: bold; cursor: pointer; margin-left: 10px; }
