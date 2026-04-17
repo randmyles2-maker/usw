@@ -1,34 +1,41 @@
 let editor, pyodide, activeLang, currentUser = null;
 
-// PWA & Session Logic
+// BOOT & SESSION RECOVERY
 window.addEventListener('load', () => {
-    const saved = sessionStorage.getItem('usw_user');
-    if (saved) {
-        currentUser = saved;
+    const savedUser = sessionStorage.getItem('usw_user');
+    const savedLang = sessionStorage.getItem('active_lang');
+    
+    if (savedUser) {
+        currentUser = savedUser;
         document.getElementById('auth-overlay').classList.add('hidden');
-        updateSidebar();
+        if (savedLang) launchIDE(savedLang, false); // Resume where you left off
+        else updateSidebar();
     }
+
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./server.js');
     }
 });
 
-// Monaco Setup
+// MONACO CONFIG
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
 require(['vs/editor/editor.main'], function() {
     editor = monaco.editor.create(document.getElementById('monaco-canvas'), {
-        theme: 'vs-dark', automaticLayout: true, fontSize: 16, 
-        fontFamily: "'JetBrains Mono'", minimap: { enabled: false },
-        backgroundColor: "#000000", lineNumbers: "on"
+        theme: 'vs-dark',
+        automaticLayout: true,
+        fontSize: 16,
+        fontFamily: "'JetBrains Mono'",
+        backgroundColor: "#000000"
     });
 });
 
+// AUTH
 function handleAuth(type) {
     const u = document.getElementById('username').value;
     const p = document.getElementById('password').value;
     const msg = document.getElementById('auth-msg');
     if (type === 'signup') {
-        if(USW_DATA.saveUser(u, p)) msg.innerText = "CREATED. LOGIN.";
+        if(USW_DATA.saveUser(u, p)) msg.innerText = "IDENTITY CREATED.";
         else msg.innerText = "ID TAKEN.";
     } else {
         if (USW_DATA.verifyUser(u, p)) {
@@ -36,32 +43,35 @@ function handleAuth(type) {
             sessionStorage.setItem('usw_user', u);
             document.getElementById('auth-overlay').classList.add('hidden');
             updateSidebar();
-        } else msg.innerText = "DENIED.";
+        } else msg.innerText = "ACCESS DENIED.";
     }
 }
 
+// IDE CONTROLS
 async function launchIDE(lang, isNew) {
     activeLang = lang;
+    sessionStorage.setItem('active_lang', lang);
     document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('editor-stage').classList.remove('hidden');
     document.getElementById('runtime-controls').classList.remove('hidden');
     
-    const mode = (lang === 'html') ? 'html' : (lang === 'javascript' ? 'javascript' : 'python');
-    monaco.editor.setModelLanguage(editor.getModel(), mode);
-
-    editor.setValue(isNew ? "" : (USW_DATA.loadCode(currentUser, lang) || ""));
+    const model = editor.getModel();
+    monaco.editor.setModelLanguage(model, lang === 'html' ? 'html' : (lang === 'javascript' ? 'javascript' : 'python'));
+    
+    if (!isNew) editor.setValue(USW_DATA.loadCode(currentUser, lang) || "");
+    else editor.setValue("");
 
     if (lang === 'python' && !pyodide) {
-        document.getElementById('output-stream').innerText = "SYSTEM: MOUNTING...";
+        document.getElementById('output-stream').innerText = "MOUNTING PYTHON...";
         pyodide = await loadPyodide();
-        document.getElementById('output-stream').innerText = "SYSTEM: READY.";
+        document.getElementById('output-stream').innerText = "READY.";
     }
 }
 
 async function runCode() {
     const out = document.getElementById('output-stream');
     const code = editor.getValue();
-    out.innerText = "RUNNING...";
+    out.innerText = "EXECUTING...";
     try {
         if (activeLang === 'python') {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
@@ -70,7 +80,7 @@ async function runCode() {
         } else if (activeLang === 'javascript') {
             const runner = new Function(code);
             runner();
-            out.innerText = "JS: EXECUTED.";
+            out.innerText = "JS: LOGIC APPLIED.";
         } else if (activeLang === 'html') {
             const win = window.open();
             win.document.write(code);
@@ -80,6 +90,7 @@ async function runCode() {
 }
 
 function backToMenu() {
+    sessionStorage.removeItem('active_lang');
     document.getElementById('editor-stage').classList.add('hidden');
     document.getElementById('runtime-controls').classList.add('hidden');
     document.getElementById('dashboard').classList.remove('hidden');
