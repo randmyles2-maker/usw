@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>USW // AETHER</title>
+    
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon-512.png">
     <link rel="apple-touch-icon" href="icon-512.png">
-    <title>USW // AETHER</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
@@ -23,7 +26,7 @@
             <button onclick="handleAuth('login')">LOGIN</button>
             <button onclick="handleAuth('signup')" class="secondary">SIGN UP</button>
         </div>
-        <p id="auth-msg"></p>
+        <p id="auth-msg" style="color:#ff4444; font-size:10px; margin-top:10px;"></p>
     </div>
 </div>
 
