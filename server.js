@@ -1,9 +1,9 @@
 /**
- * AETHER KERNEL - SERVICE WORKER V5.2
- * Provides offline support and enables PWA installation.
+ * AETHER KERNEL - SERVICE WORKER V6.0
+ * Unified logic for offline stability and PWA installation.
  */
 
-const CACHE_NAME = 'aether-v5-stable';
+const CACHE_NAME = 'aether-v6-stable';
 const ASSETS = [
     './',
     './index.html',
@@ -14,45 +14,47 @@ const ASSETS = [
     './icon-512.png'
 ];
 
-// INSTALL: Pre-cache all essential assets
+// 1. INSTALL: Force the browser to cache all assets immediately.
 self.addEventListener('install', (event) => {
+    // Force this service worker to become the active service worker.
     self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log('AETHER: Caching Kernel Assets');
+            console.log('AETHER: System files indexed.');
             return cache.addAll(ASSETS);
         })
     );
 });
 
-// ACTIVATE: Clean up old caches to prevent bugs
+// 2. ACTIVATE: Clear out old, bugged caches from previous versions.
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((keys) => {
             return Promise.all(
                 keys.map((key) => {
                     if (key !== CACHE_NAME) {
-                        console.log('AETHER: Clearing Legacy Cache', key);
+                        console.log('AETHER: Clearing legacy cache node:', key);
                         return caches.delete(key);
                     }
                 })
             );
         })
     );
+    // Ensure the service worker takes control of the page immediately.
     return self.clients.claim();
 });
 
-// FETCH: Network-first strategy with cache fallback
-// Required for the "Install" icon to appear in the URL bar
+// 3. FETCH: Essential for the "Install" button to show in the URL bar.
+// This handles the request by trying the network first, then the cache.
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         fetch(event.request)
             .then((response) => {
-                // If network is successful, return the response
+                // If network is available, use it.
                 return response;
             })
             .catch(() => {
-                // If network fails, try to serve from cache
+                // If offline or network fails, look in the cache.
                 return caches.match(event.request);
             })
     );
