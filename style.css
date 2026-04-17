@@ -1,65 +1,212 @@
 :root { 
     --bg: #000; 
-    --border: rgba(255,255,255,0.1); 
-    --accent: #fff;
+    --border: rgba(255,255,255,0.08); 
+    --text-dim: #666; 
+    --accent: #00ffaa;
 }
 
+/* 1. ANIMATED ATMOSPHERIC BACKGROUND */
 body { 
-    margin: 0; padding: 0; background: #000; color: white;
-    font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; height: 100vh;
+    margin: 0; 
+    padding: 0; 
+    background-color: #000;
+    /* Deep mesh gradient for the "Aether" look */
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(25, 25, 50, 0.4) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(20, 20, 30, 0.4) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(10, 10, 15, 0.4) 0px, transparent 50%);
+    background-attachment: fixed;
+    background-size: 200% 200%;
+    color: white; 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    overflow: hidden; 
+    height: 100vh;
+    animation: moveGradient 20s infinite alternate ease-in-out;
 }
 
-/* Moving Nebula Background - Subtle so it doesn't distract */
-body::before {
-    content: ""; position: fixed; inset: 0; z-index: -1;
-    background: radial-gradient(circle at 50% 50%, #111, #000);
-    animation: pulse 10s infinite alternate;
+@keyframes moveGradient {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
 }
-@keyframes pulse { from { opacity: 0.8; } to { opacity: 1; } }
 
 .hidden { display: none !important; }
 
-/* Navigation */
+/* 2. NAVIGATION & MINI-TERMINAL */
 .aether-nav { 
-    height: 60px; display: flex; align-items: center; justify-content: space-between; 
-    padding: 0 30px; border-bottom: 1px solid var(--border); background: #000;
+    height: 60px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 30px; 
+    border-bottom: 1px solid var(--border); 
+    background: rgba(0, 0, 0, 0.8); 
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 100;
 }
-.nav-left { display: flex; align-items: center; gap: 40px; }
-.brand { font-weight: 600; font-size: 14px; letter-spacing: 2px; }
 
-/* The "Server" Console - Now a slim status bar in the header */
+.brand { 
+    font-weight: 600; 
+    font-size: 14px; 
+    letter-spacing: 2px; 
+    text-transform: uppercase;
+}
+
 .terminal-mini { 
-    font-family: 'JetBrains Mono'; font-size: 11px; color: #00ffaa; 
-    padding: 4px 12px; border-left: 1px solid var(--border); 
+    font-family: 'JetBrains Mono'; 
+    font-size: 11px; 
+    color: var(--accent); 
+    padding: 6px 15px; 
+    border-left: 1px solid var(--border); 
+    background: rgba(0,255,170,0.05);
 }
 
-/* Layouts */
-#dashboard { display: flex; height: calc(100vh - 60px); }
+/* 3. DASHBOARD LAYOUT */
+#dashboard { 
+    display: flex; 
+    height: calc(100vh - 60px); 
+}
+
 .sidebar { 
-    width: 240px; border-right: 1px solid var(--border); 
-    background: rgba(10,10,10,0.8); padding: 30px 15px;
+    width: 260px; 
+    border-right: 1px solid var(--border); 
+    background: rgba(5, 5, 5, 0.6); 
+    backdrop-filter: blur(15px);
+    padding: 40px 20px; 
+    overflow-y: auto; 
 }
-.list-container { flex-grow: 1; padding: 60px; overflow-y: auto; }
 
-/* LIST ITEMS */
+.sidebar-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+}
+
+.list-container { 
+    flex-grow: 1; 
+    padding: 80px 100px; 
+    background: rgba(0,0,0,0.2); 
+    overflow-y: auto;
+}
+
+/* 4. INTERACTIVE ITEMS */
 .list-item { 
-    padding: 25px; border-top: 1px solid var(--border); cursor: pointer; transition: 0.2s; 
+    padding: 35px 0; 
+    border-top: 1px solid var(--border); 
+    cursor: pointer; 
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.list-item:hover { background: rgba(255,255,255,0.05); }
-.list-item .title { font-size: 22px; font-weight: 200; }
 
-/* EDITOR - FULL SCREEN TYPEABILITY */
-#editor-stage { height: calc(100vh - 60px); width: 100%; }
+.list-item:hover { 
+    padding-left: 30px; 
+    background: rgba(255,255,255,0.02);
+}
+
+.list-item .title { 
+    font-size: 26px; 
+    font-weight: 200; 
+    letter-spacing: 1px;
+}
+
+.saved-item { 
+    padding: 14px; 
+    font-size: 12px; 
+    color: #888; 
+    cursor: pointer; 
+    border-bottom: 1px solid var(--border); 
+    transition: 0.2s; 
+    font-family: 'JetBrains Mono';
+}
+
+.saved-item:hover { 
+    color: white; 
+    background: rgba(255,255,255,0.05); 
+}
+
+/* 5. EDITOR STAGE */
+#editor-stage { 
+    height: calc(100vh - 60px); 
+    width: 100%; 
+    background: #000;
+}
+
 #monaco-canvas { 
-    height: 100%; width: 100%; 
-    background: #000 !important; /* Forces visibility */
+    height: 100%; 
+    width: 100%; 
 }
 
-/* Auth Overlay */
-#auth-overlay { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; }
-.auth-card { width: 280px; text-align: center; }
-.auth-card input { 
-    width: 100%; background: #111; border: 1px solid var(--border); 
-    padding: 12px; margin-bottom: 10px; color: white; border-radius: 4px; box-sizing: border-box;
+/* 6. AUTH OVERLAY */
+#auth-overlay { 
+    position: fixed; 
+    inset: 0; 
+    background: #000; 
+    z-index: 9999; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
 }
-.action-btn { background: white; border: none; padding: 8px 16px; font-weight: bold; cursor: pointer; margin-left: 10px; }
+
+.auth-card { 
+    width: 320px; 
+    text-align: center; 
+    padding: 40px;
+    border: 1px solid var(--border);
+    background: rgba(10,10,10,0.8);
+    backdrop-filter: blur(20px);
+}
+
+.auth-card h1 {
+    font-size: 14px;
+    letter-spacing: 4px;
+    margin-bottom: 30px;
+}
+
+.auth-card input { 
+    width: 100%; 
+    background: rgba(255,255,255,0.03); 
+    border: 1px solid var(--border); 
+    padding: 14px; 
+    margin-bottom: 12px; 
+    color: white; 
+    border-radius: 4px; 
+    box-sizing: border-box;
+    outline: none;
+    font-family: 'JetBrains Mono';
+}
+
+.auth-card input:focus {
+    border-color: rgba(255,255,255,0.3);
+}
+
+/* 7. BUTTONS */
+.action-btn { 
+    background: white; 
+    color: black;
+    border: none; 
+    padding: 8px 20px; 
+    font-weight: 700; 
+    font-size: 11px;
+    text-transform: uppercase;
+    cursor: pointer; 
+    margin-left: 10px; 
+    border-radius: 2px;
+    transition: 0.2s;
+}
+
+.action-btn:hover {
+    background: #ccc;
+}
+
+.close-icon { 
+    background: none; 
+    border: none; 
+    color: white; 
+    font-size: 22px; 
+    cursor: pointer; 
+    margin-left: 20px; 
+    opacity: 0.5;
+    transition: 0.2s;
+}
+
+.close-icon:hover { opacity: 1; }
