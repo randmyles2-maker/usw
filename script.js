@@ -1,6 +1,5 @@
 let editor, pyodide, activeLang, currentUser = null;
 
-// Initialize Monaco
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
 require(['vs/editor/editor.main'], function() {
     editor = monaco.editor.create(document.getElementById('monaco-canvas'), {
@@ -9,7 +8,6 @@ require(['vs/editor/editor.main'], function() {
     });
 });
 
-// Auth Logic
 function handleAuth(type) {
     const u = document.getElementById('username').value;
     const p = document.getElementById('password').value;
@@ -23,12 +21,11 @@ function handleAuth(type) {
         if (USW_DATA.verifyUser(u, p)) {
             currentUser = u;
             document.getElementById('auth-overlay').classList.add('hidden');
-            updateSidebar(); // Show history on login
+            updateSidebar();
         } else msg.innerText = "ACCESS_DENIED.";
     }
 }
 
-// Refresh the Sidebar history
 function updateSidebar() {
     const list = document.getElementById('saved-files-list');
     const users = JSON.parse(localStorage.getItem('usw_users') || '{}');
@@ -44,7 +41,6 @@ function updateSidebar() {
     });
 }
 
-// Launch Node (isNew = True for center list, False for sidebar)
 async function launchIDE(lang, isNew) {
     activeLang = lang;
     document.getElementById('dashboard').classList.add('hidden');
@@ -67,7 +63,6 @@ async function launchIDE(lang, isNew) {
     }
 }
 
-// Run Button Logic
 async function runCode() {
     const output = document.getElementById('output-stream');
     const code = editor.getValue();
@@ -85,7 +80,6 @@ async function runCode() {
     } catch (e) { output.innerText = "Fault: " + e; }
 }
 
-// Deploy Button Logic (Save + Sidebar Update)
 function deployToGithub() {
     if (currentUser) {
         USW_DATA.saveCode(currentUser, activeLang, editor.getValue());
@@ -93,4 +87,12 @@ function deployToGithub() {
         document.getElementById('output-stream').innerText = "SNAPSHOT_SAVED.";
         window.open("https://github.com/new", "_blank");
     }
+}
+
+// FIXED: Returns to menu without logging out
+function backToMenu() {
+    document.getElementById('editor-stage').classList.add('hidden');
+    document.getElementById('runtime-controls').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    updateSidebar(); // Ensure sidebar reflects recent saves
 }
