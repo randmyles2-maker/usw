@@ -1,64 +1,54 @@
 :root { 
     --bg: #000; 
-    --border: rgba(255,255,255,0.08); 
+    --border: rgba(255,255,255,0.1); 
     --text-dim: #666; 
 }
 
 body { 
-    background: var(--bg); color: white; margin: 0; overflow: hidden;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    margin: 0; 
+    padding: 0;
+    background-color: #000;
+    /* This creates a deep, moving nebula effect */
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(25, 25, 50, 0.5) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(20, 20, 20, 0.5) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(10, 10, 15, 0.5) 0px, transparent 50%);
+    background-attachment: fixed;
+    color: white; 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    overflow: hidden;
+    height: 100vh;
 }
 
-/* Animated Atmospheric Background */
-body::before {
-    content: ""; position: fixed; inset: 0; z-index: -1;
-    background: 
-        radial-gradient(circle at 10% 10%, rgba(40, 40, 50, 0.4) 0%, transparent 40%),
-        radial-gradient(circle at 90% 90%, rgba(20, 20, 30, 0.4) 0%, transparent 40%);
-    filter: blur(60px);
-    animation: pulseBg 15s infinite alternate ease-in-out;
+/* Add a subtle animation to the background */
+body {
+    animation: moveGradient 15s infinite alternate ease-in-out;
+    background-size: 200% 200%;
 }
 
-@keyframes pulseBg {
-    from { opacity: 0.5; transform: scale(1); }
-    to { opacity: 1; transform: scale(1.1); }
+@keyframes moveGradient {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
 }
 
 .hidden { display: none !important; }
 
-/* Auth Overlay */
-#auth-overlay { position: fixed; inset: 0; background: black; z-index: 2000; display: flex; align-items: center; justify-content: center; }
-.auth-card { width: 280px; text-align: center; }
-.auth-card input { width: 100%; background: transparent; border: 1px solid var(--border); padding: 14px; margin-bottom: 12px; color: white; font-family: 'JetBrains Mono'; font-size: 11px; border-radius: 4px; outline: none; transition: border 0.3s; }
-.auth-card input:focus { border-color: white; }
-.auth-buttons { display: flex; gap: 10px; }
-.auth-buttons button { flex: 1; padding: 12px; border: none; font-weight: 700; cursor: pointer; border-radius: 4px; font-size: 10px; }
-.auth-buttons button:first-child { background: white; color: black; }
-.auth-buttons button.secondary { background: transparent; color: white; border: 1px solid var(--border); }
+/* Dashboard & Glassmorphism */
+#dashboard { display: flex; height: calc(100vh - 60px); position: relative; z-index: 10; }
+.sidebar { width: 260px; border-right: 1px solid var(--border); padding: 40px 20px; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); }
+.list-container { flex-grow: 1; padding: 60px 100px; background: rgba(255,255,255,0.02); overflow-y: auto; }
 
-/* Navigation */
-.aether-nav { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
-.brand { font-weight: 600; font-size: 14px; letter-spacing: 2px; cursor: pointer; }
-.action-btn { background: white; border: none; padding: 6px 16px; font-weight: 600; font-size: 11px; cursor: pointer; border-radius: 2px; margin-left: 10px; }
-.close-icon { background: none; border: none; color: white; font-size: 18px; cursor: pointer; margin-left: 20px; }
+/* List Items */
+.list-item { display: flex; align-items: center; padding: 30px 0; border-top: 1px solid var(--border); cursor: pointer; transition: 0.3s; }
+.list-item:hover { background: rgba(255,255,255,0.05); padding-left: 20px; }
+.list-item .title { font-size: 24px; font-weight: 200; flex: 1; }
 
-/* Dashboard Split */
-#dashboard { display: flex; height: calc(100vh - 60px); }
-.sidebar { width: 260px; border-right: 1px solid var(--border); padding: 40px 20px; background: rgba(5,5,5,0.7); overflow-y: auto; }
-.sidebar-label { font-size: 10px; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 20px; }
-.saved-item { padding: 14px; font-size: 12px; color: #888; cursor: pointer; border-bottom: 1px solid var(--border); transition: 0.2s; font-family: 'JetBrains Mono'; }
-.saved-item:hover { color: white; background: rgba(255,255,255,0.05); }
+/* Auth Layer */
+#auth-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+.auth-card { width: 300px; text-align: center; background: rgba(20,20,20,0.8); padding: 40px; border: 1px solid var(--border); border-radius: 8px; }
+.auth-card input { width: 100%; background: #111; border: 1px solid var(--border); padding: 12px; margin-bottom: 10px; color: white; border-radius: 4px; box-sizing: border-box; }
+.auth-buttons button { width: 48%; padding: 10px; cursor: pointer; border: none; font-weight: bold; }
 
-/* List */
-.list-container { flex-grow: 1; padding: 80px 100px; overflow-y: auto; background: rgba(0,0,0,0.3); }
-.list-header { font-size: 11px; color: var(--text-dim); letter-spacing: 3px; margin-bottom: 40px; }
-.list-item { display: flex; align-items: center; padding: 35px 0; border-top: 1px solid var(--border); cursor: pointer; transition: 0.4s; }
-.list-item:hover { padding-left: 25px; color: white; background: rgba(255,255,255,0.02); }
-.list-item .ln { font-size: 11px; color: var(--text-dim); width: 60px; font-family: 'JetBrains Mono'; }
-.list-item .title { font-size: 26px; font-weight: 200; flex-grow: 1; }
-.list-item .desc { font-size: 10px; color: var(--text-dim); text-transform: uppercase; }
-
-/* Monaco Workspace */
-#editor-stage { height: calc(100vh - 61px); display: flex; flex-direction: column; }
-#monaco-canvas { flex-grow: 1; }
-.aether-console { height: 160px; background: rgba(5,5,5,0.95); border-top: 1px solid var(--border); padding: 25px 40px; font-family: 'JetBrains Mono'; font-size: 12px; color: #aaa; overflow-y: auto; }
+/* Header & Console */
+.aether-nav { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.8); }
+.aether-console { height: 150px; background: rgba(0,0,0,0.9); border-top: 1px solid var(--border); padding: 20px 40px; font-family: 'JetBrains Mono'; color: #888; }
