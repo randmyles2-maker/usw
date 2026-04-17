@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>USW // AETHER</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon-512.png">
     <link rel="apple-touch-icon" href="icon-512.png">
-    <link rel="manifest" href="manifest.json">
+    <title>USW // AETHER</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
@@ -18,15 +20,15 @@
         <input type="text" id="username" placeholder="IDENTITY">
         <input type="password" id="password" placeholder="PASSWORD">
         <div class="auth-buttons">
-            <button onclick="handleAuth('login')" style="width:48%; padding:10px; cursor:pointer;">LOGIN</button>
-            <button onclick="handleAuth('signup')" style="width:48%; padding:10px; cursor:pointer; background:none; color:white; border:1px solid #333;">SIGN UP</button>
+            <button onclick="handleAuth('login')">LOGIN</button>
+            <button onclick="handleAuth('signup')" class="secondary">SIGN UP</button>
         </div>
-        <p id="auth-msg" style="font-size:10px; color:red; margin-top:10px;"></p>
+        <p id="auth-msg"></p>
     </div>
 </div>
 
 <header class="aether-nav">
-    <div style="display:flex; align-items:center; gap:30px;">
+    <div class="nav-left">
         <div class="brand">USW NETWORK</div>
         <div id="output-stream" class="terminal-mini">Ready.</div>
     </div>
@@ -39,11 +41,11 @@
 
 <main id="dashboard">
     <aside class="sidebar">
-        <div style="font-size:10px; color:#555; letter-spacing:2px; margin-bottom:20px;">ARCHIVED_NODES</div>
+        <div class="sidebar-label">ARCHIVED_NODES</div>
         <div id="saved-files-list"></div>
     </aside>
     <div class="list-container">
-        <div style="font-size:10px; color:#555; letter-spacing:2px; margin-bottom:40px;">NEW_ENVIRONMENTS</div>
+        <div class="list-header">NEW_ENVIRONMENTS</div>
         <div class="list-item" onclick="launchIDE('html', true)"><span class="title">HTML / CSS</span></div>
         <div class="list-item" onclick="launchIDE('javascript', true)"><span class="title">JavaScript</span></div>
         <div class="list-item" onclick="launchIDE('python', true)"><span class="title">Python 3</span></div>
