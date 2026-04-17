@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>USW // AETHER</title>
+    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <link rel="stylesheet" href="style.css">
@@ -16,14 +17,17 @@
         <input type="password" id="password" placeholder="PASSWORD">
         <div class="auth-buttons">
             <button onclick="handleAuth('login')">LOGIN</button>
-            <button onclick="handleAuth('signup')" class="secondary" style="background:transparent; color:white; border:1px solid #333">SIGN UP</button>
+            <button onclick="handleAuth('signup')" class="secondary">SIGN UP</button>
         </div>
-        <p id="auth-msg" style="font-size:10px; color:red; margin-top:10px;"></p>
+        <p id="auth-msg"></p>
     </div>
 </div>
 
 <header class="aether-nav">
-    <div class="brand">USW NETWORK</div>
+    <div class="nav-left">
+        <div class="brand">USW NETWORK</div>
+        <div id="output-stream" class="terminal-mini">Ready.</div>
+    </div>
     <div id="runtime-controls" class="hidden">
         <button class="action-btn" onclick="runCode()">Run</button>
         <button class="action-btn" onclick="deployToGithub()">Deploy</button>
@@ -52,7 +56,6 @@
 
 <div id="editor-stage" class="view hidden">
     <div id="monaco-canvas"></div>
-    <div class="aether-console"><div id="output-stream">Ready.</div></div>
 </div>
 
 <script src="storage.js"></script>
