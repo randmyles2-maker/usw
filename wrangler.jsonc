@@ -2,13 +2,16 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "usw",
   "compatibility_date": "2026-05-07",
+
   "observability": {
     "enabled": true
   },
+
   "assets": {
     "directory": "./",
     "binding": "ASSETS"
   },
+
   "compatibility_flags": [
     "nodejs_compat"
   ]
