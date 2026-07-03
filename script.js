@@ -41,10 +41,12 @@ async function handleAuth(type) {
     }
 
     if (type === 'signup') {
-        const success = USW_DATA.saveUser(u, p);
+        // Added await because storage functions return Promises
+        const success = await USW_DATA.saveUser(u, p);
         msg.innerText = success ? "Account provisioned. Please log in." : "Username already exists.";
     } else {
-        const valid = USW_DATA.verifyUser(u, p);
+        // Added await because storage functions return Promises
+        const valid = await USW_DATA.verifyUser(u, p);
         if (valid) {
             currentUser = u;
             sessionStorage.setItem('usw_user', u);
@@ -74,7 +76,8 @@ async function launchIDE(lang, isNew, fileId = null) {
         out.innerText = `New ${lang.toUpperCase()} workspace open.`;
     } else if (fileId) {
         currentFileId = fileId;
-        const file = USW_DATA.getFile(currentUser, fileId);
+        // Added await because storage functions return Promises
+        const file = await USW_DATA.getFile(currentUser, fileId);
         if (file) {
             editor.setValue(file.code || "");
             out.innerText = `Mounted file: ${file.filename}`;
@@ -126,7 +129,8 @@ function runCode() {
     }
 }
 
-function deployToGithub() {
+// Added async so we can use await inside this function
+async function deployToGithub() {
     const content = editor.getValue();
     const out = document.getElementById('output-stream');
 
@@ -136,24 +140,28 @@ function deployToGithub() {
     }
 
     if (currentFileId) {
-        USW_DATA.updateFileCode(currentUser, currentFileId, content);
+        // Added await because storage functions return Promises
+        await USW_DATA.updateFileCode(currentUser, currentFileId, content);
     } else {
         const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         const ext = activeLang === 'html' ? 'html' : (activeLang === 'javascript' ? 'js' : 'py');
         const name = `script_${time.replace(/[:\s]/g, '').toLowerCase()}.${ext}`;
-        currentFileId = USW_DATA.createFile(currentUser, name, activeLang, content);
+        // Added await because storage functions return Promises
+        currentFileId = await USW_DATA.createFile(currentUser, name, activeLang, content);
     }
 
     out.innerText = "Changes saved securely to local drive.";
     updateSidebar();
 }
 
-function updateSidebar() {
+// Added async so we can resolve user files asynchronously
+async function updateSidebar() {
     const list = document.getElementById('saved-files-list');
     if (!list) return;
     list.innerHTML = "";
 
-    const files = USW_DATA.getAllUserFiles(currentUser);
+    // Added await because storage functions return Promises
+    const files = await USW_DATA.getAllUserFiles(currentUser);
     if (files.length === 0) {
         list.innerHTML = `<div style="padding: 10px; font-size: 0.8rem; color: #626a7a; font-style: italic;">No saved files found.</div>`;
         return;
@@ -167,10 +175,11 @@ function updateSidebar() {
         
         item.onclick = () => launchIDE(file.lang, false, file.id);
         
-        item.querySelector('.del-btn').onclick = (e) => {
+        item.querySelector('.del-btn').onclick = async (e) => {
             e.stopPropagation();
             if (confirm("Delete this file permanently?")) {
-                USW_DATA.deleteFile(currentUser, file.id);
+                // Added await because storage functions return Promises
+                await USW_DATA.deleteFile(currentUser, file.id);
                 if (currentFileId === file.id) {
                     editor.setValue("");
                     currentFileId = null;
@@ -189,3 +198,12 @@ function backToMenu() {
     document.getElementById('output-stream').innerText = "System ready.";
     updateSidebar();
 }
+
+// Maps your exact functions to the global names that index.html calls
+window.USW_Core = {
+    handleAuth: handleAuth,
+    launchIDE: launchIDE,
+    executeCodePipeline: runCode,
+    commitWorkspaceData: deployToGithub,
+    exitStudioContext: backToMenu
+};
